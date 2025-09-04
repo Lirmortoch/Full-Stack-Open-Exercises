@@ -9,6 +9,7 @@ sequenceDiagram
     server-->>browser: reload page
     deactivate server
 
+    Note right of browser: Browser sent new note to the server
     Note right of server: Server creates a new note object<br>and pushes it to the notes array,<br>then page will be reloaded 
 
     Note over browser,server: Repeat fetching process of the resources

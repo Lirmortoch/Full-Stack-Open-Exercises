@@ -24,4 +24,10 @@ sequenceDiagram
     server-->>browser: JSON file 
     deactivate server
 
-    Note right of browser: browser render resource
+    Note right of browser: browser render resource.
+
+    browser->>server: POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+    Note right of browser: Browser sent new note to the server and redraw notes with new one
+    activate server
+    Note right of server: Server save new note
+    deactivate server
