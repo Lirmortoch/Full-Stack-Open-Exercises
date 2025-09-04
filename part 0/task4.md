@@ -2,7 +2,7 @@ sequenceDiagram
     participant browser 
     participant server
 
-    Note over browser,server: First of all, fetch resources
+    Note over browser,server: First of all, fetch resources (4 GET requests)
 
     browser->>server: POST https://studies.cs.helsinki.fi/exampleapp/new_note
     activate server
