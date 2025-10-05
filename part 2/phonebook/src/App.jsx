@@ -17,6 +17,11 @@ function App() {
       name: newName,
     }
 
+    if (persons.some(item => item.name === newPerson.name)) {
+      alert(`${newPerson.name} is already added to phonebook`);
+      return;
+    }
+
     setPersons(persons.concat(newPerson));
     setNewName('');
   }
@@ -41,7 +46,7 @@ function App() {
         <h2 className='phb-numbers__title title'>Numbers</h2>
 
         <ul className='phb-numbers__list phb-list'>
-          {persons.map(item => <li className={classNameProp}>{item.name}</li>)}
+          {persons.map(item => <li key={persons.length + 1} className={classNameProp}>{item.name}</li>)}
         </ul>
       </section>
       
