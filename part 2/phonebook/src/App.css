@@ -48,15 +48,28 @@
   text-align: center;
 }
 
-.phb-form__fieldset:not(:last-of-type) {
-  margin-bottom: 10px;
+.second-title {
+  margin-bottom: 20px;
 }
 
 .phonebook__title {
   margin-bottom: 150px;
 }
 
-.phonebook__form {
+.phonebook__form-section {
+  margin-bottom: 50px;
+}
+
+.phb-form__fieldset > * {
+  display: block;
+}
+.phb-form__fieldset > *:not(:last-child) {
+  margin-bottom: 5px;
+}
+.phb-form__fieldset:not(:last-of-type) {
+  margin-bottom: 10px;
+}
+.phb-form__fieldset:last-of-type {
   margin-bottom: 30px;
 }
 
@@ -64,13 +77,18 @@
   margin-right: 10px;
 }
 
-.phb-form__button {
-  display: block;
-  margin: 0 auto;
+.phb-form__input {
+  width: 100%;
+
+  border: 1px solid rgb(148, 148, 148);
+  border-radius: 4px;
+
+  padding: 10px 15px;
 }
 
-.phb-numbers__title {
-  margin-bottom: 10px;
+.phb-form__button {
+  display: block;
+  width: 100%;
 }
 
 .phb-list {
