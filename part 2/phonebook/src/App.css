@@ -56,6 +56,10 @@
   margin-bottom: 150px;
 }
 
+.phonebook__form {
+  margin-bottom: 30px;
+}
+
 .phb-form__label {
   margin-right: 10px;
 }
@@ -63,4 +67,13 @@
 .phb-form__button {
   display: block;
   margin: 0 auto;
+}
+
+.phb-numbers__title {
+  margin-bottom: 10px;
+}
+
+.phb-list {
+  list-style: none;
+  word-break: break-all;
 }
