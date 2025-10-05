@@ -3,7 +3,10 @@ import './App.css';
 
 function App() {
   const [persons, setPersons] = useState([
-    
+    { name: 'Arto Hellas', number: '040-123456', id: 1 },
+    { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
+    { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
+    { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 },
   ]); 
   const [newName, setNewName] = useState('');
   const [newPhone, setNewPhone] = useState('');
@@ -19,7 +22,8 @@ function App() {
 
     const newPerson = {
       name: newName,
-      phone: newPhone,
+      number: newPhone,
+      id: persons.length + 1,
     }
 
     if (persons.some(item => item.name === newPerson.name)) {
@@ -29,6 +33,7 @@ function App() {
 
     setPersons(persons.concat(newPerson));
     setNewName('');
+    setNewPhone('');
   }
 
   const classNameProp = 'phb-list__item'
@@ -57,7 +62,7 @@ function App() {
         <h2 className='phb-numbers__title title second-title'>Numbers</h2>
 
         <ul className='phb-numbers__list phb-list'>
-          {persons.map(item => <li key={persons.length + 1} className={classNameProp}>{item.name} - {item.phone}</li>)}
+          {persons.map(item => <li key={item.id} className={classNameProp}>{item.name} {item.number}</li>)}
         </ul>
       </section>
       
