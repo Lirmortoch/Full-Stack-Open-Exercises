@@ -1,5 +1,9 @@
-import { use, useState } from 'react';
+import { useState } from 'react';
 import './App.css';
+
+import Filter from './components/Filter';
+import PersonForm from './components/PersonForm';
+import Persons from './components/Persons';
 
 function App() {
   const [persons, setPersons] = useState([
@@ -38,7 +42,6 @@ function App() {
     setFilter(event.target.value);
   }
 
-  const classNameProp = 'phb-list__item';
   const personsToShow = persons.filter(item => {
     const regEx = new RegExp(filter, 'gim');
     return regEx.test(item.name);
@@ -48,38 +51,11 @@ function App() {
     <main className='phonebook'>
       <h1 className='phonebook__title title'>Phonebook</h1>
 
-      <section className='phonebook__form-section form-section'>
-        <form className='phonebook__form phb-form'>
-          <fieldset className='phb-form__fieldset'>
-            <label htmlFor='phb-input-name' className='phb-form__label'>Filter shown with</label>
-            <input type='text' className='phb-form__input' id='phb-input-name' name='phb-input-name' placeholder='Enter Filter' onChange={handleFilter} />
-          </fieldset>
-        </form>
-      </section>
+      <Filter handleFilter={handleFilter} />
 
-      <section className='phonebook__form-section form-section'>
-        <h2 className='form-section__title title second-title'>Add a new</h2>
+      <PersonForm handleNameChange={handleNameChange} handlePhoneChange={handlePhoneChange} handleSavePerson={handleSavePerson} />
 
-        <form className='phonebook__form phb-form'>
-          <fieldset className='phb-form__fieldset'>
-            <label htmlFor='phb-input-name' className='phb-form__label'>Name</label>
-            <input type='text' className='phb-form__input' id='phb-input-name' name='phb-input-name' onChange={handleNameChange} placeholder='Enter Name' />
-          </fieldset>
-          <fieldset className='phb-form__fieldset'>
-            <label htmlFor='phb-input-phone' className='phb-form__label'>Number</label>
-            <input type='tel' className='phb-form__input' id='phb-input-phone' name='phb-input-phone' onChange={handlePhoneChange} placeholder='Enter Phone Number' />
-          </fieldset>
-          <button type="submit" className='phb-form__button' onClick={handleSavePerson} >Add</button>
-        </form>
-      </section>
-
-      <section className='phonebook__numbers phb-numbers'>
-        <h2 className='phb-numbers__title title second-title'>Numbers</h2>
-
-        <ul className='phb-numbers__list phb-list'>
-          {personsToShow.map(item => <li key={item.id} className={classNameProp}>{item.name} {item.number}</li>)}
-        </ul>
-      </section>  
+      <Persons personsToShow={personsToShow} />
     </main>
   )
 }
