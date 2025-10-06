@@ -53,10 +53,10 @@
 }
 
 .phonebook__title {
-  margin-bottom: 150px;
+  margin-bottom: 100px;
 }
 
-.phonebook__form-section {
+.form-section {
   margin-bottom: 50px;
 }
 
@@ -71,10 +71,6 @@
 }
 .phb-form__fieldset:last-of-type {
   margin-bottom: 30px;
-}
-
-.phb-form__label {
-  margin-right: 10px;
 }
 
 .phb-form__input {
