@@ -6,10 +6,12 @@ import Filter from './components/Filter';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
 
+const personsUrl = 'http://localhost:3001/persons';
+
 function App() {
   function useEffectHook() {
     axios
-      .get('http://localhost:3001/persons')
+      .get(personsUrl)
       .then(resp => setPersons(resp.data))
   }
 
@@ -40,7 +42,11 @@ function App() {
       return;
     }
 
-    setPersons(persons.concat(newPerson));
+    axios
+      .post(personsUrl, newPerson)
+      .then(response => {
+        setPersons(persons.concat(response.data));
+      });
   }
   const handleFilter = (event) => {
     setFilter(event.target.value);
