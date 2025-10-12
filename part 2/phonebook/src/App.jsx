@@ -1,18 +1,20 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import './App.css';
 
 import Filter from './components/Filter';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
 
-const personsUrl = 'http://localhost:3001/persons';
+import personsService from './services/persons';
 
 function App() {
   function useEffectHook() {
-    axios
-      .get(personsUrl)
-      .then(resp => setPersons(resp.data))
+    personsService
+      .getAll()
+      .then(initialPersons => setPersons(initialPersons))
+      .catch(error => {
+        console.log(`Can't load persons. Get something trouble: ${error}`);
+      });
   }
 
   useEffect(useEffectHook, []);
@@ -42,10 +44,13 @@ function App() {
       return;
     }
 
-    axios
-      .post(personsUrl, newPerson)
-      .then(response => {
-        setPersons(persons.concat(response.data));
+    personsService
+      .create(newPerson)
+      .then(returnedPerson => {
+        setPersons(persons.concat(returnedPerson));
+      })
+      .catch(error => {
+        console.log(`Can't add new person. Get some trouble: ${error}`);
       });
   }
   const handleFilter = (event) => {
