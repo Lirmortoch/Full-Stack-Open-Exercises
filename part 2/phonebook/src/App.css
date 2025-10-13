@@ -91,3 +91,13 @@
   list-style: none;
   word-break: break-all;
 }
+
+.phb-list__item:not(:last-of-type) {
+  margin-bottom: 5px;
+}
+.phb-list__item > span:first-of-type {
+  margin-right: 5px;
+}
+.phb-list__item > span:last-of-type {
+  margin-right: 15px;
+}

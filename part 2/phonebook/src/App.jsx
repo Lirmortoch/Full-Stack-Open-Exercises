@@ -56,6 +56,14 @@ function App() {
   const handleFilter = (event) => {
     setFilter(event.target.value);
   }
+  const handleDeletePerson = (person) => {
+    const isDelete = confirm(`Delete ${person.name}`);
+
+    if (!isDelete) return;
+
+    const filteredPersons = persons.filter(per => per.id !== person.id);
+    setPersons(filteredPersons);
+  }
 
   const personsToShow = persons.filter(item => {
     const regEx = new RegExp(filter, 'gim');
@@ -70,7 +78,7 @@ function App() {
 
       <PersonForm handleNameChange={handleNameChange} handlePhoneChange={handlePhoneChange} handleSavePerson={handleSavePerson} />
 
-      <Persons personsToShow={personsToShow} />
+      <Persons personsToShow={personsToShow} handleDeleteUser={handleDeletePerson} />
     </main>
   )
 }
