@@ -40,7 +40,10 @@ function App() {
     }
 
     if (persons.some(item => item.name === newPerson.name)) {
-      alert(`${newPerson.name} is already added to phonebook`);
+      const isAddNewNumber = confirm(`${newPerson.name} is already added to phonebook, replace the old number with a new one?`);
+
+      if (isAddNewNumber) updatePerson(newPerson.name);
+
       return;
     }
 
@@ -63,8 +66,27 @@ function App() {
 
     const filteredPersons = persons.filter(per => per.id !== person.id);
     setPersons(filteredPersons);
+    personsService
+      .deleteItem(person.id)
+      .catch(error => {
+        console.log(`Can't delete user ${person.name}. Get some trouble: ${error}`);
+      });
   }
 
+  const updatePerson = (name) => {
+    const person = persons.find(p => p.name === name);
+    const id = person.id;
+    const updatedPerson = {...person, number: newPhone};
+
+    personsService
+      .update(id, updatedPerson)
+      .then(returnedPerson => {
+        setPersons(persons.map(p => p.id === id ? returnedPerson : p));
+      })
+      .catch(error => {
+        console.log(`Can't update person's number. Get some trouble: ${error}`);
+      });
+  }
   const personsToShow = persons.filter(item => {
     const regEx = new RegExp(filter, 'gim');
     return regEx.test(item.name);
