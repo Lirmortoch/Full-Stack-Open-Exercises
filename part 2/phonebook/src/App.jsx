@@ -8,6 +8,8 @@ import Notification from './components/Notification';
 
 import personsService from './services/persons';
 
+
+
 function App() {
   function useEffectHook() {
     personsService
@@ -25,7 +27,7 @@ function App() {
     setTimeout(() => {
       setMessage(null);
       setMessageType('');
-    }, 5000);
+    }, 10000);
   }
 
   useEffect(useEffectHook, []);
@@ -94,7 +96,7 @@ function App() {
         setPersons(persons.filter(person => person.id !== deletedPerson.id));
       })
       .catch(error => {
-        console.log(`Can't delete user ${name}. Get some trouble: ${error}`);
+        showMessage(`Information of ${name} has already been removed from server`, 'error');
       });
   }
 

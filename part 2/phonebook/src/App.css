@@ -112,9 +112,15 @@
 
   padding: 10px;
   margin-bottom: 10px;
+
+  max-width: 100%;
 }
 
 .phb-message.end-success {
   color: green;
   border-color: green;
+}
+.phb-message.error {
+  color: red;
+  border-color: red;
 }
