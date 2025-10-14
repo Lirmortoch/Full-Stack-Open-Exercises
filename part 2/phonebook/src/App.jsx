@@ -36,7 +36,7 @@ function App() {
     const newPerson = {
       name: newName,
       number: newPhone,
-      id: persons.length + 1,
+      id: String(persons.length + 1),
     }
 
     if (persons.some(item => item.name === newPerson.name)) {
@@ -51,6 +51,8 @@ function App() {
       .create(newPerson)
       .then(returnedPerson => {
         setPersons(persons.concat(returnedPerson));
+        setNewName('');
+        setNewPhone('');
       })
       .catch(error => {
         console.log(`Can't add new person. Get some trouble: ${error}`);
@@ -59,17 +61,18 @@ function App() {
   const handleFilter = (event) => {
     setFilter(event.target.value);
   }
-  const handleDeletePerson = (person) => {
-    const isDelete = confirm(`Delete ${person.name}`);
+  const handleDeletePerson = (id, name) => {
+    const isDelete = confirm(`Delete ${name}?`);
 
     if (!isDelete) return;
-
-    const filteredPersons = persons.filter(per => per.id !== person.id);
-    setPersons(filteredPersons);
+    
     personsService
-      .deleteItem(person.id)
+      .deleteItem(id)
+      .then(deletedPerson => {
+        setPersons(persons.filter(person => person.id !== deletedPerson.id));
+      })
       .catch(error => {
-        console.log(`Can't delete user ${person.name}. Get some trouble: ${error}`);
+        console.log(`Can't delete user ${name}. Get some trouble: ${error}`);
       });
   }
 
@@ -82,6 +85,8 @@ function App() {
       .update(id, updatedPerson)
       .then(returnedPerson => {
         setPersons(persons.map(p => p.id === id ? returnedPerson : p));
+        setNewName('');
+        setNewPhone('');
       })
       .catch(error => {
         console.log(`Can't update person's number. Get some trouble: ${error}`);
@@ -98,7 +103,7 @@ function App() {
 
       <Filter handleFilter={handleFilter} />
 
-      <PersonForm handleNameChange={handleNameChange} handlePhoneChange={handlePhoneChange} handleSavePerson={handleSavePerson} />
+      <PersonForm handleNameChange={handleNameChange} handlePhoneChange={handlePhoneChange} handleSavePerson={handleSavePerson} name={newName} phone={newPhone} />
 
       <Persons personsToShow={personsToShow} handleDeleteUser={handleDeletePerson} />
     </main>
