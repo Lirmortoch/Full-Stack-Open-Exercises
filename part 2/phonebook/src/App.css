@@ -101,3 +101,20 @@
 .phb-list__item > span:last-of-type {
   margin-right: 15px;
 }
+
+.phb-message {
+  background: lightgrey;
+  font-size: 20px;
+
+  border-style: solid;
+  border-radius: 5px;
+  border-width: 2px;
+
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.phb-message.end-success {
+  color: green;
+  border-color: green;
+}

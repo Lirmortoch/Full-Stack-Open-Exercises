@@ -4,6 +4,7 @@ import './App.css';
 import Filter from './components/Filter';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
+import Notification from './components/Notification';
 
 import personsService from './services/persons';
 
@@ -17,12 +18,26 @@ function App() {
       });
   }
 
+  function showMessage(message, type) {
+    setMessage(message);
+    setMessageType(type);
+
+    setTimeout(() => {
+      setMessage(null);
+      setMessageType('');
+    }, 5000);
+  }
+
   useEffect(useEffectHook, []);
 
   const [persons, setPersons] = useState([]); 
   const [newName, setNewName] = useState('');
   const [newPhone, setNewPhone] = useState('');
+
   const [filter, setFilter] = useState('');
+
+  const [message, setMessage] = useState(null);
+  const [messageType, setMessageType] = useState('');
 
   const handleNameChange = (event) => {
     setNewName(event.target.value);
@@ -32,13 +47,17 @@ function App() {
   }
   const handleSavePerson = (event) => {
     event.preventDefault();
+    if (newName === '' || newPhone === '') {
+      alert('Can\'t add empty field');
+      return;
+    }
 
     const newPerson = {
       name: newName,
       number: newPhone,
-      id: String(persons.length + 1),
+      id: persons.length + 1,
     }
-
+    
     if (persons.some(item => item.name === newPerson.name)) {
       const isAddNewNumber = confirm(`${newPerson.name} is already added to phonebook, replace the old number with a new one?`);
 
@@ -51,8 +70,11 @@ function App() {
       .create(newPerson)
       .then(returnedPerson => {
         setPersons(persons.concat(returnedPerson));
+
         setNewName('');
         setNewPhone('');
+
+        showMessage(`Added ${returnedPerson.name}`, 'end-success');
       })
       .catch(error => {
         console.log(`Can't add new person. Get some trouble: ${error}`);
@@ -65,7 +87,7 @@ function App() {
     const isDelete = confirm(`Delete ${name}?`);
 
     if (!isDelete) return;
-    
+
     personsService
       .deleteItem(id)
       .then(deletedPerson => {
@@ -100,6 +122,8 @@ function App() {
   return (
     <main className='phonebook'>
       <h1 className='phonebook__title title'>Phonebook</h1>
+      
+      <Notification type={messageType} msg={message} />
 
       <Filter handleFilter={handleFilter} />
 
