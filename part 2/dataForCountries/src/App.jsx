@@ -1,34 +1,38 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+
+import Form from './components/Form';
+import DisplayCountry from './components/displayCountry';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [country, setCountry] = useState('');
+  const [countries, setCountries] = useState([]);
+
+  function hook() {
+    axios
+      .get('https://studies.cs.helsinki.fi/restcountries/api/all')
+      .then(response => {
+        setCountries(countries.concat(response.data));
+      });
+  }
+
+  useEffect(hook, []);
+
+  function handleOnChangeCountry(e) {
+    setCountry(e.target.value);
+  }
+
+  const countriesToShow = countries.filter(c => {
+    const countryRegEx = new RegExp(`${country}`, 'gmi');
+    return countryRegEx.test(c.name.common);
+  });
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <main>
+      <Form handleOnChange={handleOnChangeCountry} />
+
+      <DisplayCountry countries={countriesToShow} />
+    </main>
   )
 }
 
