@@ -10,3 +10,9 @@ section > ul {
 .capital > p {
   margin: 0;
 }
+.countr li > span {
+  margin-right: 5px;
+}
+.flag > img {
+  border: 1px solid rgb(143, 143, 143);
+}

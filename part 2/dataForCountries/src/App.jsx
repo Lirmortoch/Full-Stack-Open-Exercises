@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 import Form from './components/Form';
-import DisplayCountry from './components/displayCountry';
+import DisplayCountries from './components/DisplayCountries';
 
 function App() {
   const [country, setCountry] = useState('');
@@ -13,6 +13,9 @@ function App() {
       .get('https://studies.cs.helsinki.fi/restcountries/api/all')
       .then(response => {
         setCountries(countries.concat(response.data));
+      })
+      .catch(error => {
+        console.log(`Can't fetch data, something gone wrong: ${error}`)
       });
   }
 
@@ -21,17 +24,23 @@ function App() {
   function handleOnChangeCountry(e) {
     setCountry(e.target.value);
   }
+  function handleShowCountry(country) {
+    setCountry(country);
+  }
 
-  const countriesToShow = countries.filter(c => {
-    const countryRegEx = new RegExp(`${country}`, 'gmi');
-    return countryRegEx.test(c.name.common);
-  });
+  let countriesToShow;
+  if (country !== '') {
+    countriesToShow = countries.filter(c => {
+      const countryRegEx = new RegExp(`${country}`, 'gmi');
+      return countryRegEx.test(c.name.common);
+    });
+  }
 
   return (
     <main>
-      <Form handleOnChange={handleOnChangeCountry} />
+      <Form handleOnChange={handleOnChangeCountry} value={country} />
 
-      <DisplayCountry countries={countriesToShow} />
+      <DisplayCountries countries={countriesToShow} handleShowCountry={handleShowCountry} />
     </main>
   )
 }

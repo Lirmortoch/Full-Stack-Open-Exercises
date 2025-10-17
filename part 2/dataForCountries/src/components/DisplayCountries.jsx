@@ -1,7 +1,10 @@
-export default function DisplayCountry({ countries }) {
+export default function DisplayCountries({ countries, handleShowCountry }) {
   let elem;
 
-  if (countries.length > 10) {
+  if (countries === undefined) {
+    elem = <p>No countries to show</p>
+  }
+  else if (countries.length > 10) {
     elem = <p>Too many matches, specify another filter</p>
   }
   else if (countries.length <= 10 && countries.length > 1) {
@@ -10,7 +13,8 @@ export default function DisplayCountry({ countries }) {
         {countries.map(item => {
           return (
               <li key={item.area}>
-                {item.name.common}
+                <span>{item.name.common}</span>
+                <button onClick={() => handleShowCountry(item.name.common)}>Show</button>
               </li>
             );
         })}
@@ -38,18 +42,15 @@ export default function DisplayCountry({ countries }) {
           </ul>
         </div>
 
-        <div>
+        <div className="flag">
           <img src={country.flags.png} alt={country.flags.alt}></img>
         </div>
       </>
     );
   }
-  else {
-    elem = <p>No countries to show</p>
-  }
 
   return (
-    <section>
+    <section className="countr">
         {elem}
     </section>
   )
