@@ -4,11 +4,14 @@ import axios from 'axios';
 import Form from './components/Form';
 import DisplayCountries from './components/DisplayCountries';
 
+const weatherId = import.meta.env.VITE_SOME_KEY;
+
 function App() {
   const [country, setCountry] = useState('');
   const [countries, setCountries] = useState([]);
+  const [weather, setWeather] = useState(undefined);
 
-  function hook() {
+  function hookGetCountries() {
     axios
       .get('https://studies.cs.helsinki.fi/restcountries/api/all')
       .then(response => {
@@ -19,7 +22,7 @@ function App() {
       });
   }
 
-  useEffect(hook, []);
+  useEffect(hookGetCountries, []);
 
   function handleOnChangeCountry(e) {
     setCountry(e.target.value);
@@ -29,6 +32,7 @@ function App() {
   }
 
   let countriesToShow;
+
   if (country !== '') {
     countriesToShow = countries.filter(c => {
       const countryRegEx = new RegExp(`${country}`, 'gmi');
@@ -40,7 +44,7 @@ function App() {
     <main>
       <Form handleOnChange={handleOnChangeCountry} value={country} />
 
-      <DisplayCountries countries={countriesToShow} handleShowCountry={handleShowCountry} />
+      <DisplayCountries countries={countriesToShow} handleShowCountry={handleShowCountry} weatherId={weatherId} />
     </main>
   )
 }

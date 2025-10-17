@@ -1,4 +1,6 @@
-export default function DisplayCountries({ countries, handleShowCountry }) {
+import axios from "axios";
+
+export default function DisplayCountries({ countries, handleShowCountry, weatherId }) {
   let elem;
 
   if (countries === undefined) {
@@ -23,6 +25,13 @@ export default function DisplayCountries({ countries, handleShowCountry }) {
   }
   else if (countries.length === 1) {
     const country = countries[0];
+    let weather;
+    // axios
+    //   .get(`https://api.openweathermap.org/data/2.5/weather?lat=${country.latlng[0]}&lon=${country.latlng[1]}&appid=${weatherId}`)
+    //   .then(response => {
+    //       weather = response.data;
+    //   })
+    //   .catch(error => console.log(error));
 
     elem = (
       <>
@@ -45,8 +54,20 @@ export default function DisplayCountries({ countries, handleShowCountry }) {
         <div className="flag">
           <img src={country.flags.png} alt={country.flags.alt}></img>
         </div>
+
+        <div>
+          <h2>Weather in {country.name.common}</h2>
+
+          <p>Temperature </p>
+          <div>
+            {/* <img src={} alt={}/> */}
+          </div>
+          <p>Wind </p>
+        </div>
       </>
     );
+
+    console.log(weather)
   }
 
   return (
