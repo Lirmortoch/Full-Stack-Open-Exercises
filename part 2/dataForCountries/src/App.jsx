@@ -2,14 +2,13 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 import Form from './components/Form';
-import DisplayCountries from './components/DisplayCountries';
+import Country from './components/Country';
 
 const weatherId = import.meta.env.VITE_SOME_KEY;
 
 function App() {
   const [country, setCountry] = useState('');
   const [countries, setCountries] = useState([]);
-  const [weather, setWeather] = useState(undefined);
 
   function hookGetCountries() {
     axios
@@ -18,7 +17,7 @@ function App() {
         setCountries(countries.concat(response.data));
       })
       .catch(error => {
-        console.log(`Can't fetch data, something gone wrong: ${error}`)
+        console.log(`Can't fetch countries, something gone wrong: ${error}`)
       });
   }
 
@@ -40,11 +39,37 @@ function App() {
     });
   }
 
+  let elem;
+
+  if (countriesToShow === undefined || countriesToShow.length === 0) {
+    elem = <p>No countries to show</p>
+  }
+  else if (countriesToShow.length > 10) {
+    elem = <p>Too many matches, specify another filter</p>
+  }
+  else if (countriesToShow.length <= 10 && countriesToShow.length > 1) {
+    elem = (
+      <ul>
+        {countriesToShow.map(item => {
+          return (
+              <li key={item.area}>
+                <span>{item.name.common}</span>
+                <button onClick={() => handleShowCountry(item.name.common)}>Show</button>
+              </li>
+            );
+        })}
+      </ul>
+    );
+  }
+  else if (countriesToShow.length === 1) {
+    elem = <Country country={countriesToShow[0]} weatherId={weatherId} />;
+  }
+
   return (
     <main>
       <Form handleOnChange={handleOnChangeCountry} value={country} />
 
-      <DisplayCountries countries={countriesToShow} handleShowCountry={handleShowCountry} weatherId={weatherId} />
+      <section className='country'>{elem}</section>
     </main>
   )
 }
