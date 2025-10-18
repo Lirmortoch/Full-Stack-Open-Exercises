@@ -15,7 +15,7 @@ export default function Country({ country, weatherId }) {
   }
 
   useEffect(hookGetWeather, []);
-  console.log(weather);
+
   return (  
     <>
         <h1>{country.name.common}</h1>

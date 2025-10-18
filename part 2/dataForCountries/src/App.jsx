@@ -7,14 +7,14 @@ import Country from './components/Country';
 const weatherId = import.meta.env.VITE_SOME_KEY;
 
 function App() {
-  const [country, setCountry] = useState('');
+  const [country, setCountry] = useState(undefined);
   const [countries, setCountries] = useState([]);
 
   function hookGetCountries() {
     axios
       .get('https://studies.cs.helsinki.fi/restcountries/api/all')
       .then(response => {
-        setCountries(countries.concat(response.data));
+        setCountries(c => c.concat(response.data));
       })
       .catch(error => {
         console.log(`Can't fetch countries, something gone wrong: ${error}`)
