@@ -13,6 +13,6 @@ section > ul {
 .country li > span {
   margin-right: 5px;
 }
-.flag > img {
+:is(.flag, .weather-icon) > img {
   border: 1px solid rgb(143, 143, 143);
 }

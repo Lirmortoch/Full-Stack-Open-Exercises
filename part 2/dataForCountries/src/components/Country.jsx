@@ -42,7 +42,7 @@ export default function Country({ country, weatherId }) {
           <h2>Weather in {country.name.common}</h2>
 
           <p>Temperature {weather.main.temp} Celsius</p>
-          <div>
+          <div className="weather-icon">
             <img src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`} alt={weather.weather[0].description}/>
           </div>
           <p>Wind {weather.wind.speed} m/s</p>
