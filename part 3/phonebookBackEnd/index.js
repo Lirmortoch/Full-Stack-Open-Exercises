@@ -61,10 +61,19 @@ app.delete('/api/persons/:id', (request, response) => {
 
 app.post('/api/persons', (request, response) => {
   const body = request.body;
-  console.log(body);
+  const nameIsExists = persons.some(p => p.name === body.name);
+ 
   if (!body.name || !body.number) {
+    const missedField = !body.name  === undefined ? 'Name' 
+      : !body.number === undefined ? 'Number' : 'Some';
+
     return response.status(400).json({
-      error: 'Some information missing',
+      error: `${missedField} was missing`,
+    });
+  }
+  if (nameIsExists) {
+    return response.status(400).json({
+      error: 'name must be unique'
     });
   }
 
