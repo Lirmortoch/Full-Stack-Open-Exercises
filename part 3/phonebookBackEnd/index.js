@@ -20,9 +20,16 @@ let persons = [
       "number": "39-23-6423122"
     }
 ];
+const generateId = (arr) => {
+  const maxId = arr.length > 0
+    ? Math.max(...arr.map(n => Number(n.id)))
+    : 0
+  return String(maxId + 1)
+}
 
 const express = require('express');
 const app = express();
+app.use(express.json());
 
 app.get('/api/persons', (request, response) => {
   response.json(persons);
@@ -50,6 +57,26 @@ app.delete('/api/persons/:id', (request, response) => {
   persons = persons.filter(p => p.id !== id);
 
   response.status(204).end();
+});
+
+app.post('/api/persons', (request, response) => {
+  const body = request.body;
+  console.log(body);
+  if (!body.name || !body.number) {
+    return response.status(400).json({
+      error: 'Some information missing',
+    });
+  }
+
+  const person = {
+    name: body.name,
+    number: body.number,
+    id: generateId(persons)
+  }
+
+  persons = persons.concat(person);
+
+  response.json(person);
 });
 
 const PORT = 3001;
