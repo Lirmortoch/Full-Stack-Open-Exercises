@@ -29,9 +29,11 @@ const generateId = (arr) => {
 
 const express = require('express');
 const morgan = require('morgan');
+const cors = require('cors');
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 app.use(morgan((tokens, req, res) => {
   const response = ':method :url :status :res[content-length] - :response-time ms';
   return [
@@ -68,7 +70,6 @@ app.get('/api/persons/:id', (request, response) => {
 app.delete('/api/persons/:id', (request, response) => {
   const id = request.params.id;
   persons = persons.filter(p => p.id !== id);
-
   response.status(204).end();
 });
 
@@ -97,7 +98,7 @@ app.post('/api/persons', (request, response) => {
   }
 
   persons = persons.concat(person);
-
+ 
   response.json(person);
 });
 
