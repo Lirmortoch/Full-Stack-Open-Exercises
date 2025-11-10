@@ -1,25 +1,31 @@
 const mongoose = require('mongoose');
-const {loadEnvFile, argv} = require('node:process');
+const { loadEnvFile } = require('node:process');
 loadEnvFile();
 
-if (argv.length !== 5 && argv.length !== 3) {
-  console.log('Provide user\'s password');
-  process.exit(1);
-}
-
-const password = process.env.PASSWORD_MONGO_DB;
-
-const url = `mongodb+srv://dima2111323_db_user:${password}@cluster0.lzqwpxp.mongodb.net/?appName=Cluster0`;
+const url = process.env.MONGODB_URI;
 
 mongoose.set('strictQuery', false);
-mongoose.connect(url);
+mongoose.connect(url)
+  .then(result => {
+    console.log('Connected to MongoDB database');
+  })
+  .catch(error => {
+    console.log(`Error to connecting: ${error.message}`);
+  });
 
 const personSchema = new mongoose.Schema({
   id: Number,
   name: String,
   number: String,
 }, {collection: 'persons'});
-const Person = mongoose.model('Person', personSchema);
+personSchema.set('toJSON', {
+  transform: (document, returnedObject) => {
+    delete returnedObject.__v
+    delete returnedObject._id
+  }
+});
+
+module.exports = mongoose.model('Person', personSchema);
 
 async function addPerson() {
   if (argv[2] === password) {
@@ -73,5 +79,3 @@ async function addPerson() {
     process.exit(1);
   }
 }
-
-addPerson();

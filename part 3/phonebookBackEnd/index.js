@@ -1,3 +1,6 @@
+const {loadEnvFile} = require('node:process');
+loadEnvFile();
+
 let persons = [
     { 
       "id": "1",
@@ -27,8 +30,11 @@ const generateId = (arr) => {
   return String(maxId + 1)
 }
 
+const mongoose = require('mongoose');
 const express = require('express');
 const morgan = require('morgan');
+
+const Person = require('./models/person');
 
 const app = express();
 app.use(express.json());
@@ -46,24 +52,38 @@ app.use(morgan((tokens, req, res) => {
 app.use(express.static("dist"));
 
 app.get('/api/persons', (request, response) => {
-  response.json(persons);
+  Person.find({}).then(result => {
+    response.json(result);
+  })
+  .catch(error => {
+    console.log('Get error while fetching data from database: ', error.message);
+  })
 });
 app.get('/api/info', (request, response) => {
-  response.send(`
-    <p>Phonebook has info for ${persons.length} people</p>
-    <p>${new Date()}</p>
-  `);
+  Person.find({}).then(result => {
+    response.send(`
+      <p>Phonebook has info for ${result.length} people</p>
+      <p>${new Date()}</p>
+    `);
+  })
+  .catch(error => {
+    console.log('Get error while fetching data from database: ', error.message);
+  });
 });
 app.get('/api/persons/:id', (request, response) => {
-  const id = request.params.id;
-  const person = persons.find(p => p.id === id);
-
-  if (person) {
-    response.json(person);
-  }
-  else {
-    response.status(404).end();
-  }
+  const personsId = request.params.id;
+  
+  Person.findOne({ id: personsId }).then(result => {
+    if (result) {
+      response.json(result);
+    }
+    else {
+      response.status(404).end();
+    }
+  })
+  .catch(error => {
+    console.log('Can\'t fetching data, get some error: ', error.message);
+  });
 });
 
 app.delete('/api/persons/:id', (request, response) => {
@@ -72,33 +92,33 @@ app.delete('/api/persons/:id', (request, response) => {
   response.status(204).end();
 });
 
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', async (request, response) => {
   const body = request.body;
-  const nameIsExists = persons.some(p => p.name === body.name);
+  const nameIsExists = await Person.findOne({name: body.name}).exec() === null ? false : true;
  
-  if (!body.name || !body.number) {
-    const missedField = !body.name  === undefined ? 'Name' 
-      : !body.number === undefined ? 'Number' : 'Some';
-
-    return response.status(400).json({
-      error: `${missedField} was missing`,
-    });
-  }
   if (nameIsExists) {
     return response.status(400).json({
       error: 'name must be unique'
     });
   }
 
-  const person = {
-    name: body.name,
-    number: body.number,
-    id: generateId(persons)
-  }
+  try {
+    const doc = await Person.findOne({}).sort({ id: -1 }).exec();
+    const maxId = doc.id !== undefined ? doc.id : 0;
 
-  persons = persons.concat(person);
- 
-  response.json(person);
+    const person = new Person({
+      id: maxId + 1,
+      name: body.name,
+      number: body.number,
+    });
+
+    const saveResult = await person.save();
+    console.log('Person was saved!');
+    response.json('Person was saved!');
+  }
+  catch(err) {
+    console.log('Get some error!: ', err);
+  }
 });
 
 const PORT = process.env.PORT || 3001;
