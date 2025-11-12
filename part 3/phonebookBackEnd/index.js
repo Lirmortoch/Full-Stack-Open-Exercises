@@ -1,42 +1,13 @@
 const {loadEnvFile} = require('node:process');
 loadEnvFile();
 
-let persons = [
-    { 
-      "id": "1",
-      "name": "Arto Hellas", 
-      "number": "040-123456"
-    },
-    { 
-      "id": "2",
-      "name": "Ada Lovelace", 
-      "number": "39-44-5323523"
-    },
-    { 
-      "id": "3",
-      "name": "Dan Abramov", 
-      "number": "12-43-234345"
-    },
-    { 
-      "id": "4",
-      "name": "Mary Poppendieck", 
-      "number": "39-23-6423122"
-    }
-];
-const generateId = (arr) => {
-  const maxId = arr.length > 0
-    ? Math.max(...arr.map(n => Number(n.id)))
-    : 0
-  return String(maxId + 1)
-}
-
-const mongoose = require('mongoose');
 const express = require('express');
 const morgan = require('morgan');
 
 const Person = require('./models/person');
 
 const app = express();
+
 app.use(express.json());
 app.use(morgan((tokens, req, res) => {
   const response = ':method :url :status :res[content-length] - :response-time ms';
@@ -59,17 +30,17 @@ app.get('/api/persons', (request, response) => {
     console.log('Get error while fetching data from database: ', error.message);
   })
 });
-app.get('/api/info', (request, response) => {
-  Person.find({}).then(result => {
-    response.send(`
-      <p>Phonebook has info for ${result.length} people</p>
-      <p>${new Date()}</p>
-    `);
-  })
-  .catch(error => {
-    console.log('Get error while fetching data from database: ', error.message);
-  });
-});
+// app.get('/api/info', (request, response) => {
+//   Person.find({}).then(result => {
+//     response.send(`
+//       <p>Phonebook has info for ${result.length} people</p>
+//       <p>${new Date()}</p>
+//     `);
+//   })
+//   .catch(error => {
+//     console.log('Get error while fetching data from database: ', error.message);
+//   });
+// });
 app.get('/api/persons/:id', (request, response) => {
   const personsId = request.params.id;
   
@@ -87,9 +58,11 @@ app.get('/api/persons/:id', (request, response) => {
 });
 
 app.delete('/api/persons/:id', (request, response) => {
-  const id = request.params.id;
-  persons = persons.filter(p => p.id !== id);
-  response.status(204).end();
+  Person.findByIdAndDelete(request.params.id)
+    .then(result => {
+      response.status(204).end();
+    })
+    .catch()
 });
 
 app.post('/api/persons', async (request, response) => {
@@ -114,7 +87,7 @@ app.post('/api/persons', async (request, response) => {
 
     const saveResult = await person.save();
     console.log('Person was saved!');
-    response.json('Person was saved!');
+    response.status(200).end();
   }
   catch(err) {
     console.log('Get some error!: ', err);
