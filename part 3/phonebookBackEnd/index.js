@@ -8,6 +8,7 @@ const Person = require('./models/person');
 
 const app = express();
 
+app.use(express.static("dist"));
 app.use(express.json());
 app.use(morgan((tokens, req, res) => {
   const response = ':method :url :status :res[content-length] - :response-time ms';
@@ -20,15 +21,24 @@ app.use(morgan((tokens, req, res) => {
     tokens.method(req, res) === 'POST' ? JSON.stringify(req.body) : ''
   ].join(' ');
 }));
-app.use(express.static("dist"));
+
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message);
+
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id' });
+  }
+
+  next(error);
+}
+
+app.use(errorHandler);
 
 app.get('/api/persons', (request, response) => {
-  Person.find({}).then(result => {
-    response.json(result);
+  Person.find({}).then(persons => {
+    response.json(persons);
   })
-  .catch(error => {
-    console.log('Get error while fetching data from database: ', error.message);
-  })
+  .catch(error => next(error));
 });
 // app.get('/api/info', (request, response) => {
 //   Person.find({}).then(result => {
@@ -44,25 +54,23 @@ app.get('/api/persons', (request, response) => {
 app.get('/api/persons/:id', (request, response) => {
   const personsId = request.params.id;
   
-  Person.findOne({ id: personsId }).then(result => {
-    if (result) {
-      response.json(result);
+  Person.findOne({ id: personsId }).then(person => {
+    if (person) {
+      response.json(person);
     }
     else {
       response.status(404).end();
     }
   })
-  .catch(error => {
-    console.log('Can\'t fetching data, get some error: ', error.message);
-  });
+  .catch(error => next(error));
 });
 
 app.delete('/api/persons/:id', (request, response) => {
   Person.findByIdAndDelete(request.params.id)
-    .then(result => {
+    .then(person => {
       response.status(204).end();
     })
-    .catch()
+    .catch(error => next(error));
 });
 
 app.post('/api/persons', async (request, response) => {
@@ -89,8 +97,8 @@ app.post('/api/persons', async (request, response) => {
     console.log('Person was saved!');
     response.status(200).end();
   }
-  catch(err) {
-    console.log('Get some error!: ', err);
+  catch(error) {
+    next(error)
   }
 });
 
