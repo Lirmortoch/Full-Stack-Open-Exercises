@@ -90,11 +90,7 @@ app.post('/api/persons', async (request, response, next) => {
   }
 
   try {
-    const doc = await Person.findOne({}).sort({ id: -1 }).exec();
-    const maxId = doc.id !== undefined ? doc.id : 0;
-
     const person = new Person({
-      id: maxId + 1,
       name: body.name,
       number: body.number,
     });
