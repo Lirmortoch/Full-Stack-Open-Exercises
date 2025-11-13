@@ -14,12 +14,13 @@ mongoose.connect(url)
   });
 
 const personSchema = new mongoose.Schema({
-  id: Number,
+  id: String,
   name: String,
   number: String,
 }, {collection: 'persons'});
 personSchema.set('toJSON', {
   transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject._id.toString()
     delete returnedObject.__v
     delete returnedObject._id
   }

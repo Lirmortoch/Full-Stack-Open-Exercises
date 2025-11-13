@@ -34,27 +34,25 @@ const errorHandler = (error, request, response, next) => {
 
 app.use(errorHandler);
 
-app.get('/api/persons', (request, response) => {
+app.get('/api/persons', (request, response, next) => {
   Person.find({}).then(persons => {
     response.json(persons);
   })
   .catch(error => next(error));
 });
-// app.get('/api/info', (request, response) => {
-//   Person.find({}).then(result => {
-//     response.send(`
-//       <p>Phonebook has info for ${result.length} people</p>
-//       <p>${new Date()}</p>
-//     `);
-//   })
-//   .catch(error => {
-//     console.log('Get error while fetching data from database: ', error.message);
-//   });
-// });
-app.get('/api/persons/:id', (request, response) => {
-  const personsId = request.params.id;
-  
-  Person.findOne({ id: personsId }).then(person => {
+app.get('/api/info', (request, response, next) => {
+  Person.find({}).then(result => {
+    response.send(`
+      <p>Phonebook has info for ${result.length} people</p>
+      <p>${new Date()}</p>
+    `);
+  })
+  .catch(error => {
+    console.log('Get error while fetching data from database: ', error.message);
+  });
+});
+app.get('/api/persons/:id', (request, response, next) => {
+  Person.findById(request.params.id).then(person => {
     if (person) {
       response.json(person);
     }
@@ -65,7 +63,7 @@ app.get('/api/persons/:id', (request, response) => {
   .catch(error => next(error));
 });
 
-app.delete('/api/persons/:id', (request, response) => {
+app.delete('/api/persons/:id', (request, response, next) => {
   Person.findByIdAndDelete(request.params.id)
     .then(person => {
       response.status(204).end();
@@ -73,14 +71,22 @@ app.delete('/api/persons/:id', (request, response) => {
     .catch(error => next(error));
 });
 
-app.post('/api/persons', async (request, response) => {
+app.post('/api/persons', async (request, response, next) => {
   const body = request.body;
-  const nameIsExists = await Person.findOne({name: body.name}).exec() === null ? false : true;
+  const pers = await Person.findOne({name: body.name}).exec();
  
-  if (nameIsExists) {
-    return response.status(400).json({
-      error: 'name must be unique'
-    });
+  if (pers !== null) {
+    Person.findById(pers.id)
+      .then(person => {
+        person.number = body.number;
+
+        return person.save().then(result => {
+          response.json(result);
+        })
+      })
+      .catch(error => next(error));
+
+    response.status(204).end();
   }
 
   try {
