@@ -5,6 +5,7 @@ const express = require('express');
 const morgan = require('morgan');
 
 const Person = require('./models/person');
+const { request } = require('node:http');
 
 const app = express();
 
@@ -72,27 +73,10 @@ app.delete('/api/persons/:id', (request, response, next) => {
 });
 
 app.post('/api/persons', async (request, response, next) => {
-  const body = request.body;
-  const pers = await Person.findOne({name: body.name}).exec();
- 
-  if (pers !== null) {
-    Person.findById(pers.id)
-      .then(person => {
-        person.number = body.number;
-
-        return person.save().then(result => {
-          response.json(result);
-        })
-      })
-      .catch(error => next(error));
-
-    response.status(204).end();
-  }
-
   try {
     const person = new Person({
-      name: body.name,
-      number: body.number,
+      name: request.body.name,
+      number: request.body.number,
     });
 
     const saveResult = await person.save();
@@ -102,6 +86,18 @@ app.post('/api/persons', async (request, response, next) => {
   catch(error) {
     next(error)
   }
+});
+
+app.put('/api/persons/:id', (request, response, next) => {request.
+  Person.findById(request.params.id)
+    .then(person => {
+      person.number = request.body.number;
+
+      return person.save().then(result => {
+        response.json(result);
+      })
+    })
+    .catch(error => next(error));
 });
 
 const PORT = process.env.PORT || 3001;

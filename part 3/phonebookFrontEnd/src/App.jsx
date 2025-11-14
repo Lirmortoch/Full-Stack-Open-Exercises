@@ -93,7 +93,6 @@ function App() {
     personsService
       .deleteItem(id)
       .then(deletedPerson => {
-        console.log('here');
         setPersons(persons.filter(person => person.id !== id));
       })
       .catch(error => {
