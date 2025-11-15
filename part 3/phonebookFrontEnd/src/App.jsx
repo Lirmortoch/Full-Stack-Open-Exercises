@@ -57,7 +57,7 @@ function App() {
     const newPerson = {
       name: newName,
       number: newPhone,
-      id: persons.length + 1,
+      'react-key': persons.length + 1,
     }
     
     if (persons.some(item => item.name === newPerson.name)) {
@@ -71,7 +71,7 @@ function App() {
     personsService
       .create(newPerson)
       .then(returnedPerson => {
-        setPersons(persons.concat(returnedPerson));
+        setPersons((prevPersons) => prevPersons.concat(returnedPerson));
 
         setNewName('');
         setNewPhone('');
@@ -79,7 +79,7 @@ function App() {
         showMessage(`Added ${returnedPerson.name}`, 'end-success');
       })
       .catch(error => {
-        console.log(`Can't add new person. Get some trouble: ${error}`);
+        showMessage(`${error.message}`, 'error');
       });
   }
   const handleFilter = (event) => {
