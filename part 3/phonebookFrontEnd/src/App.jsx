@@ -79,7 +79,7 @@ function App() {
         showMessage(`Added ${returnedPerson.name}`, 'end-success');
       })
       .catch(error => {
-        showMessage(`${error.message}`, 'error');
+        showMessage(`${error.response.data.error}`, 'error');
       });
   }
   const handleFilter = (event) => {
