@@ -1,18 +1,16 @@
-const {loadEnvFile} = require('node:process');
+const { loadEnvFile } = require('node:process');
 loadEnvFile();
 
 const express = require('express');
 const morgan = require('morgan');
 
 const Person = require('./models/person');
-const { request } = require('node:http');
 
 const app = express();
 
 app.use(express.static("dist"));
 app.use(express.json());
 app.use(morgan((tokens, req, res) => {
-  const response = ':method :url :status :res[content-length] - :response-time ms';
   return [
     tokens.method(req, res),
     tokens.url(req, res),
@@ -33,7 +31,7 @@ const errorHandler = (error, request, response, next) => {
     console.log(`here`);
     return response.status(400).json({ error: error.message })
   }
-  
+
   next(error);
 }
 
@@ -51,7 +49,7 @@ app.get('/api/info', (request, response, next) => {
     `);
   })
   .catch(error => {
-    console.log('Get error while fetching data from database: ', error.message);
+    next(error);
   });
 });
 app.get('/api/persons/:id', (request, response, next) => {
@@ -68,7 +66,7 @@ app.get('/api/persons/:id', (request, response, next) => {
 
 app.delete('/api/persons/:id', (request, response, next) => {
   Person.findByIdAndDelete(request.params.id)
-    .then(person => {
+    .then(() => {
       response.status(204).end();
     })
     .catch(error => next(error));
@@ -76,7 +74,7 @@ app.delete('/api/persons/:id', (request, response, next) => {
 
 app.post('/api/persons', (request, response, next) => {
   const person = new Person({
-    'react-key': request.body["react-key"], 
+    'react-key': request.body["react-key"],
     name: request.body.name,
     number: request.body.number,
   });

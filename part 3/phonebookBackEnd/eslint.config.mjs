@@ -18,10 +18,10 @@ export default defineConfig([
       '@stylistic/js': stylisticJs,
     },
     rules: {
-      '@stylistic/js/indent': ['error', 2],
+      '@stylistic/js/indent': 'off',
       '@stylistic/js/linebreak-style': ['error', 'unix'],
-      '@stylistic/js/quotes': "off",
-      '@stylistic/js/semi': ['error', 'always'],
+      '@stylistic/js/quotes': 'off',
+      '@stylistic/js/semi': 'off',
     },
   },
   {
@@ -33,6 +33,7 @@ export default defineConfig([
       'no-trailing-spaces': 'warn',
       'object-curly-spacing': ['error', 'always'],
       'arrow-spacing': ['error', { before: true, after: true }],
+      'no-console': 'off',
     }
   },
 ]);

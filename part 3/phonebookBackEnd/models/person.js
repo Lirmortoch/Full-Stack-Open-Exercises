@@ -6,7 +6,7 @@ const url = process.env.MONGODB_URI;
 
 mongoose.set('strictQuery', false);
 mongoose.connect(url)
-  .then(result => {
+  .then(() => {
     console.log('Connected to MongoDB database');
   })
   .catch(error => {
@@ -19,7 +19,7 @@ const personSchema = new mongoose.Schema({
     type: String,
     minLength: 2,
     required: true,
-  }, 
+  },
   number: {
     type: String,
     validate: {
@@ -31,7 +31,7 @@ const personSchema = new mongoose.Schema({
     required: [true, 'Person\'s phone number required']
   },
   "react-key": Number,
-}, {collection: 'persons'});
+}, { collection: 'persons' });
 personSchema.set('toJSON', {
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString()
