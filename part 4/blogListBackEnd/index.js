@@ -2,7 +2,6 @@ const { loadEnvFile } = require('node:process');
 loadEnvFile();
 
 const express = require('express');
-const mongoose = require('mongoose');
 
 const app = express();
 
