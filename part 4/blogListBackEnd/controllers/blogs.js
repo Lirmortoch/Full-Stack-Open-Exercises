@@ -43,5 +43,18 @@ BlogsRouter.delete('/:id', (request, response, next) => {
 BlogsRouter.put('/:id', (request, response, next) => {
   const { title, author, url, likes } = request.body;
 
-  
+  Blog.findById(request.params.id)
+    .then(blog => {
+      if (!blog) {
+        response.status(404).end();
+      }
+
+      blog = {title, author, url, likes};
+
+      return blog.save()
+        .then(savedBlog => response.json(savedBlog)); 
+    })
+    .catch(error => next(error));
 });
+
+module.exports = BlogsRouter;
