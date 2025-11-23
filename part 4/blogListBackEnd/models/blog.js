@@ -1,5 +1,5 @@
-const config = require('./utils/config');
-const { info, err } = require('./utils/logger');
+const config = require('../utils/config');
+const { info, err } = require('../utils/logger');
 
 const mongoose = require('mongoose');
 
