@@ -44,9 +44,30 @@ const mostBlogs = blogs => {
   return mostBlogsByAuthor.author === '' ? {} : mostBlogsByAuthor;
 }
 
+const mostLikes = blogs => {
+  const map = {};
+  let mostLikesByAuthor = {
+    author: '', likes: 0
+  }
+
+  blogs.forEach(blog => {
+    map[blog.author] = (map[blog.author] || 0) + blog.likes;
+
+    if (mostLikesByAuthor.likes < map[blog.author]) {
+      mostLikesByAuthor = {
+        author: blog.author, 
+        likes: map[blog.author],
+      }
+    }
+  });
+
+  return mostLikesByAuthor.author === '' ? {} : mostLikesByAuthor;
+}
+
 module.exports = {
   dummy,
   totalLikes,
   favBlog,
   mostBlogs,
+  mostLikes,
 }
