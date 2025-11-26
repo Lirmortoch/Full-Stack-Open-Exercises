@@ -73,11 +73,6 @@ describe('dummys', () => {
   });
 });
 
-function doTest(func, funcArgs, expectedVal) {
-  const result = func(...funcArgs);
-  assert.strictEqual(result, expectedVal);
-}
-
 describe('likes', () => {
   test('of empty list is zero', () => {
     const result = listHelper.totalLikes([]);
@@ -98,7 +93,7 @@ describe('favorite blog', () => {
     const result = listHelper.favBlog(emptyBlogs);
     assert.deepStrictEqual(result, {});
   });
-  test('when list has only one blog, equals the likes of that', () => {
+  test('when list has only one blog, result equals this blog', () => {
     const result = listHelper.favBlog(listWithOneBlog);
     assert.deepStrictEqual(result, 
     {
@@ -120,6 +115,29 @@ describe('favorite blog', () => {
       url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
       likes: 12,
       __v: 0
+    });
+  });
+});
+
+describe('most blogs', () => {
+  test('of empty list is zero', () => {
+    const result = listHelper.mostBlogs(emptyBlogs);
+    assert.deepStrictEqual(result, {});
+  });
+  test('when list has only one blog, result equals this author', () => {
+    const result = listHelper.mostBlogs(listWithOneBlog);
+    assert.deepStrictEqual(result, 
+    {
+      author: 'Edsger W. Dijkstra',
+      blogs: 1,
+    });
+  });
+  test('of a bigger list is calculated right', () => {
+    const result = listHelper.mostBlogs(blogs);
+    assert.deepStrictEqual(result, 
+    {
+      author: "Robert C. Martin",
+      blogs: 3,
     });
   });
 });
