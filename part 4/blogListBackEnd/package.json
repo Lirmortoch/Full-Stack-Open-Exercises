@@ -14,13 +14,17 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "test": "node --test",
-    "dev": "node --watch index.js",
-    "start": "node index.js",
+    "start": "cross-env NODE_ENV=production node index.js",
+    "dev": "cross-env NODE_ENV=development node --watch index.js",
+    "test": "cross-env NODE_ENV=test node --test",
     "lint": "eslint ."
   },
   "dependencies": {
+    "cross-env": "^10.1.0",
     "express": "^5.1.0",
     "mongoose": "^8.20.0"
+  },
+  "devDependencies": {
+    "supertest": "^7.1.4"
   }
 }

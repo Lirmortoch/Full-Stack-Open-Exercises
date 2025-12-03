@@ -3,7 +3,7 @@ const { info, err } = require('../utils/logger');
 
 const mongoose = require('mongoose');
 
-mongoose.connect(config.MONGODB_URI, { family: 4 })
+mongoose.connect(config.MONGODB_URI, { family: 4, dbName: process.env.NODE_ENV === 'test' ? 'testingDB' : 'test' })
   .then(() => info('Connected to MongoDB'))
   .catch(error => {
     err(`Error connecting to MongoDB: `, error.message);
