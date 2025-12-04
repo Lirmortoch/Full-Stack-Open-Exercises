@@ -34,6 +34,13 @@ test('get one specific blog', async () => {
   assert(contents.includes('React patterns'));
 });
 
+test('get right id properties', async () => {
+  const response = await api.get('/api/blogs');
+  const areHaveProp = response.body.filter(item => Object.hasOwn(item, 'id'));
+
+  assert.strictEqual(areHaveProp.length, helper.initialBlogs.length);
+});
+
 after(async () => {
   await mongoose.connection.close();
 });
