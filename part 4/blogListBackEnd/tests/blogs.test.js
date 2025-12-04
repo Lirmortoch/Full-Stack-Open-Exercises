@@ -112,6 +112,29 @@ test('deletion of a blog', async () => {
   assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length - 1)
 });
 
+test('update blog', async () => {
+  const blogsAtStart = await helper.blogsInDb();
+  const blogToUpdate = blogsAtStart[0];
+
+  const updatedBlog = {
+    title: 'Redux useful tricks',
+    author: 'Micheal Chan',
+    url: 'https://reduxtricks.com/',
+    likes: 53,
+  }
+
+  await api
+    .put(`/api/blogs/${blogToUpdate.id}`)
+    .send(updatedBlog)
+    .expect(200)
+    .expect('Content-Type', /application\/json/);
+
+  const blogsAtEnd = await helper.blogsInDb();
+  const contents = blogsAtEnd.map(b => b.title);
+  
+  assert(contents.includes(updatedBlog.title));
+});
+
 after(async () => {
   await mongoose.connection.close();
 });

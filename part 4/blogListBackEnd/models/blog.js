@@ -10,9 +10,21 @@ mongoose.connect(config.MONGODB_URI, { family: 4, dbName: process.env.NODE_ENV =
   });
 
 const blogSchema = mongoose.Schema({
-  title: String,
-  author: String,
-  url: String,
+  title: {
+    type: String,
+    minLength: 7,
+    required: true,
+  },
+  author: {
+    type: String,
+    minLength: 5,
+    required: true,
+  },
+  url: {
+    type: String,
+    minLength: 10,
+    required: true,
+  },
   likes: Number,
 }, { collection: 'blogs' });
 blogSchema.set('toJSON', {
