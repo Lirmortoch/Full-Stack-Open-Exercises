@@ -41,6 +41,27 @@ test('get right id properties', async () => {
   assert.strictEqual(areHaveProp.length, helper.initialBlogs.length);
 });
 
+test('a valid blog can be added', async () => {
+  const newBlog = {
+    title: 'Redux useful tricks',
+    author: 'Micheal Chan',
+    url: 'https://reduxtricks.com/',
+    likes: 53,
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const blogsInDataBase = await helper.blogsInDb();
+  assert.strictEqual(blogsInDataBase.length, helper.initialBlogs.length + 1);
+
+  const contents = blogsInDataBase.map(b => b.title);
+  assert(contents.includes('Redux useful tricks'));
+});
+
 after(async () => {
   await mongoose.connection.close();
 });

@@ -16,7 +16,7 @@ BlogsRouter.get('/:id', async (request, response, next) => {
   }
 });
 
-BlogsRouter.post('/', (request, response, next) => {
+BlogsRouter.post('/', async (request, response, next) => {
   const body = request.body;
 
   const newBlog = new Blog({
@@ -26,9 +26,8 @@ BlogsRouter.post('/', (request, response, next) => {
     likes: body.likes,
   });
 
-  newBlog.save()
-    .then(blog => response.json(blog))
-    .catch(error => next(error));
+  const savedBlog = await newBlog.save();
+  response.status(201).json(savedBlog)
 });    
 
 BlogsRouter.delete('/:id', (request, response, next) => {
