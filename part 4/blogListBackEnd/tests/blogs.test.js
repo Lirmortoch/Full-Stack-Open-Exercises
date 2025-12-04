@@ -85,6 +85,18 @@ test('a blog without likes can be added', async () => {
   assert.notStrictEqual(blogLikes, undefined);
 });
 
+test('a blog without title or url is not added', async () => {
+  const newBlog = {
+    title: 'React useful tricks',
+    author: 'Micheal Chan',
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400);
+});
+
 after(async () => {
   await mongoose.connection.close();
 });
