@@ -53,13 +53,36 @@ test('a valid blog can be added', async () => {
     .post('/api/blogs')
     .send(newBlog)
     .expect(201)
-    .expect('Content-Type', /application\/json/)
+    .expect('Content-Type', /application\/json/);
 
   const blogsInDataBase = await helper.blogsInDb();
   assert.strictEqual(blogsInDataBase.length, helper.initialBlogs.length + 1);
 
   const contents = blogsInDataBase.map(b => b.title);
   assert(contents.includes('Redux useful tricks'));
+});
+
+test('a blog without likes can be added', async () => {
+  const newBlog = {
+    title: 'React useful tricks',
+    author: 'Micheal Chan',
+    url: 'https://reactricks.com/',
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/);
+
+  const blogsInDataBase = await helper.blogsInDb();
+  assert.strictEqual(blogsInDataBase.length, helper.initialBlogs.length + 1);
+
+  const contents = blogsInDataBase.map(b => b.title);
+  assert(contents.includes('React useful tricks'));
+
+  const blogLikes = blogsInDataBase.filter(b => b.title === newBlog.title)[0].likes;
+  assert.notStrictEqual(blogLikes, undefined);
 });
 
 after(async () => {
