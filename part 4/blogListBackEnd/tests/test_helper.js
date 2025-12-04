@@ -51,4 +51,23 @@ const initialBlogs = [
   }  
 ]
 
-module.exports = { initialBlogs }
+const nonExistingId = async () => {
+  const blog = new Blog({
+    title: 'Redux useful tricks',
+    author: 'Micheal Chan',
+    url: 'https://reduxtricks.com/',
+    likes: 53,
+  });
+
+  await blog.save();
+  await blog.deleteOne();
+
+  return blog._id.toString();
+}
+
+const blogsInDb = async () => {
+  const blogs = await Blog.find({});
+  return blogs.map(blog => blog.toJSON());
+}
+
+module.exports = { initialBlogs, nonExistingId, blogsInDb }
