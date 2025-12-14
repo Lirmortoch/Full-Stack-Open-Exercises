@@ -10,7 +10,11 @@ mongoose.connect(config.MONGODB_URI, { family: 4, dbName: process.env.NODE_ENV =
   });
 
 const userSchema = new mongoose.Schema({
-  username: String,
+  username: {
+    type: String,
+    required: true,
+    unique: true,
+  },
   name: String,
   passwordHash: String,
   blogs: [
