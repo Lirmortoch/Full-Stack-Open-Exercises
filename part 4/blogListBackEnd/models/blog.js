@@ -16,9 +16,8 @@ const blogSchema = mongoose.Schema({
     required: true,
   },
   author: {
-    type: String,
-    minLength: 5,
-    required: true,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
   },
   url: {
     type: String,
