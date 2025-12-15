@@ -15,7 +15,8 @@ const blogSchema = mongoose.Schema({
     minLength: 7,
     required: true,
   },
-  author: {
+  author: String,
+  user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   },
