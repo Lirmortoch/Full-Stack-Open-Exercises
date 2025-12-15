@@ -171,6 +171,43 @@ describe('when there is initially one user in db', () => {
     const usernames = usersAtEnd.map(u => u.username);
     assert(usernames.includes(newUser.username));
   });
+  test('creation fails with a no-unique name', async () => {
+    const usersAtStart = await helper.usersInDb();
+    
+    const newUser = {
+      username: 'root',
+      name: 'Bob Kalenchinski',
+      password: 'secret123',
+    }
+
+    const result = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/);
+
+    const usersAtEnd = await helper.usersInDb();
+    assert(result.body.error.includes('expected `username` to be unique'));
+
+    assert.strictEqual(usersAtEnd.length, usersAtStart.length);
+  });
+  test('creation fails with a short password', async () => {
+    const usersAtStart = await helper.usersInDb();
+    
+    const newUser = {
+      username: 'BobLahnac',
+      name: 'Bob Kalenchinski',
+      password: '12',
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(404);
+
+    const usersAtEnd = await helper.usersInDb();
+    assert.strictEqual(usersAtEnd.length, usersAtStart.length);
+  })
 })
 
 after(async () => {
