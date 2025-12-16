@@ -24,6 +24,7 @@ mongoose
 app.use(express.static('dist'));
 app.use(express.json());
 app.use(middleware.requestLogger);
+app.use(middleware.tokenExtractor);
 
 app.use('/api/blogs', blogsRouter);
 app.use('/api/users', usersRouter);
@@ -33,5 +34,3 @@ app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);
 
 module.exports = app;
-
-// "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY5M2VhMzQ2NzA2ODg3NTZlNjM5NzBhYSIsImlhdCI6MTc2NTg4OTkzNH0.RQ3ypnRICYag9HpqLi7kiuXR3bLm2c-bYGfSBkWCfNo"
