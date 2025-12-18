@@ -1,7 +1,5 @@
-const jwt = require('jsonwebtoken');
 const BlogsRouter = require('express').Router();
 const Blog = require('../models/blog');
-const User = require('../models/user');
 const { userExtractor } = require('../utils/middleware');
 
 BlogsRouter.get('/', async (request, response, next) => {
@@ -23,6 +21,8 @@ BlogsRouter.post('/', userExtractor, async (request, response, next) => {
   const body = request.body;
 
   const user = request.user;
+
+  console.log(user, body);
 
   if (body.title === undefined || body.url === undefined) {
     response.status(400).end();
@@ -51,6 +51,8 @@ BlogsRouter.post('/', userExtractor, async (request, response, next) => {
 BlogsRouter.delete('/:id', userExtractor, async (request, response, next) => {
   const user = request.user;
   const blog = await Blog.findById(request.params.id);
+
+  console.log(blog)
 
   if (user.id.toString() !== blog.user.toString()) {
     return response.status(401).json({ error: 'invalid user' });
