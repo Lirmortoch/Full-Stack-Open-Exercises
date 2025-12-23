@@ -21,7 +21,9 @@ const App = () => {
 
       const user = await loginService.login({ username, password })
 
+      localStorage.setItem('blogAppUser', JSON.stringify(user));
       blogService.setToken(user.token)
+
       setUser(user)
 
       usernameRef.current.value = ''
@@ -61,10 +63,20 @@ const App = () => {
   )
   
   useEffect(() => {
+    const loggedUserJSON = localStorage.getItem('blogAppUser')
+
+    if (loggedUserJSON) {
+      const parsedUser = JSON.parse(loggedUserJSON)
+
+      setUser(parsedUser)
+      blogService.setToken(parsedUser.token)
+    }
+  }, [])
+  useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
     )  
-  }, [user])
+  }, [])
 
   return (
     <main>
