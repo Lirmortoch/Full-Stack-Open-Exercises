@@ -5,3 +5,7 @@
 form label {
   margin-right: 5px;
 }
+
+p > button {
+  margin-left: 50px;
+}
