@@ -1,3 +1,7 @@
 .form__btn {
   margin-top: 10px;
 }
+
+form label {
+  margin-right: 5px;
+}
