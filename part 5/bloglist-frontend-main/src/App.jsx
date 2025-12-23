@@ -4,6 +4,7 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 
 import './App.css'
+import BlogForm from './components/BlogForm'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -11,6 +12,22 @@ const App = () => {
 
   const usernameRef = useRef()
   const passwordRef = useRef()
+
+  useEffect(() => {
+    const loggedUserJSON = localStorage.getItem('blogAppUser')
+
+    if (loggedUserJSON) {
+      const parsedUser = JSON.parse(loggedUserJSON)
+
+      setUser(parsedUser)
+      blogService.setToken(parsedUser.token)
+    }
+  }, [])
+  useEffect(() => {
+    blogService.getAll().then(blogs =>
+      setBlogs( blogs )
+    )  
+  }, [])
 
   async function handleLogin(e) {
     e.preventDefault()
@@ -39,24 +56,34 @@ const App = () => {
     setUser(null);
     blogService.setToken(null);
   }
+  async function handleAddBlog(e, title, author, url) {
+    e.preventDefault()
+
+    try {
+
+    }
+    catch(error) {
+      
+    }
+  }
 
   let mainElem = (
     <>
       <h2>log in to application</h2>
       <form onSubmit={handleLogin}>
         <fieldset>
-          <label htmlFor='form-username'>username</label>
-          <input type='text' id='form-username' name='form-username' ref={usernameRef} />
+          <label htmlFor='user-form-username'>username</label>
+          <input type='text' id='user-form-username' name='user-form-username' ref={usernameRef} />
         </fieldset>
+
         <fieldset>
-          <label htmlFor='form-password'>password</label>
-          <input type='password' id='form-password' name='form-password' ref={passwordRef} />
+          <label htmlFor='user-form-password'>password</label>
+          <input type='password' id='user-form-password' name='user-form-password' ref={passwordRef} />
         </fieldset>
-        <button type='submit' className='form__btn'>Log In</button>
+        <button type='submit' className='user-form__btn form__btn'>Log In</button>
       </form>
     </>
   )
-
   if (user) {
     mainElem = (
       <>
@@ -66,6 +93,8 @@ const App = () => {
           <button onClick={handleLogout}>Logout</button>
         </p>
         
+        <BlogForm />
+
         <ul>
           {blogs.map(blog =>
             <Blog key={blog.id} blog={blog} />
@@ -74,22 +103,6 @@ const App = () => {
       </>
     )
   }
-  
-  useEffect(() => {
-    const loggedUserJSON = localStorage.getItem('blogAppUser')
-
-    if (loggedUserJSON) {
-      const parsedUser = JSON.parse(loggedUserJSON)
-
-      setUser(parsedUser)
-      blogService.setToken(parsedUser.token)
-    }
-  }, [])
-  useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )  
-  }, [])
 
   return (
     <main>
