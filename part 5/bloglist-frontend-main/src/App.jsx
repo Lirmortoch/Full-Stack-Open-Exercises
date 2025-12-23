@@ -21,6 +21,7 @@ const App = () => {
 
       const user = await loginService.login({ username, password })
 
+      blogService.setToken(user.token)
       setUser(user)
 
       usernameRef.current.value = ''
@@ -58,12 +59,12 @@ const App = () => {
       )}
     </section>
   )
-
+  
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
     )  
-  }, [])
+  }, [user])
 
   return (
     <main>
