@@ -17,14 +17,14 @@ const App = () => {
     const loggedUserJSON = localStorage.getItem('blogAppUser')
 
     if (loggedUserJSON) {
-      const parsedUser = JSON.parse(loggedUserJSON)
+      const parsedUser = JSON.parse(loggedUserJSON);
 
-      setUser(parsedUser)
-      blogService.setToken(parsedUser.token)
+      blogService.setToken(parsedUser.token);
+      setUser(parsedUser);
     }
   }, [])
   useEffect(() => {
-    blogService.getAll().then(blogs =>
+    blogService.getAllBlogs().then(blogs =>
       setBlogs( blogs )
     )  
   }, [])
@@ -47,7 +47,7 @@ const App = () => {
       passwordRef.current.value = ''
     }
     catch(error) {
-      console.log('wrong credentials', error)
+      console.log('wrong credentials', error.message)
     }
   }
   function handleLogout() {
@@ -60,11 +60,22 @@ const App = () => {
     e.preventDefault()
 
     try {
-
-    }
-    catch(error) {
+      const blog  = {
+        title: title.current.value,
+        author: author.current.value,
+        url: url.current.value,
+      };
       
+      const returnedBlog = await blogService.createNewBlog(blog);
+      setBlogs(prevBlogs => prevBlogs.concat(returnedBlog))
     }
+    catch (error) {
+      console.log('something went wrong: ', error);
+    }
+
+    title.current.value = '';
+    author.current.value = '';
+    url.current.value = '';
   }
 
   let mainElem = (
@@ -93,7 +104,7 @@ const App = () => {
           <button onClick={handleLogout}>Logout</button>
         </p>
         
-        <BlogForm />
+        <BlogForm handleAddBlog={handleAddBlog} />
 
         <ul>
           {blogs.map(blog =>

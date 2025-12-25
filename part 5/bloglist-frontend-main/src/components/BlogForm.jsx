@@ -8,9 +8,9 @@ export default function BlogForm({ handleAddBlog }) {
   return (
     <form onSubmit={(e) => handleAddBlog(
       e, 
-      titleRef.current.value, 
-      authorRef.current.value,
-      urlRef.current.value
+      titleRef, 
+      authorRef,
+      urlRef
     )}>
 
       <fieldset>

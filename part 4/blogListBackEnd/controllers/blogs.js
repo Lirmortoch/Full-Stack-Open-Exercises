@@ -22,8 +22,6 @@ BlogsRouter.post('/', userExtractor, async (request, response, next) => {
 
   const user = request.user;
 
-  console.log(user, body);
-
   if (body.title === undefined || body.url === undefined) {
     response.status(400).end();
   }
@@ -44,7 +42,7 @@ BlogsRouter.post('/', userExtractor, async (request, response, next) => {
 
   user.blogs = user.blogs.concat(savedBlog._id);
   await user.save();
-
+  
   response.status(201).json(savedBlog)
 });    
 
