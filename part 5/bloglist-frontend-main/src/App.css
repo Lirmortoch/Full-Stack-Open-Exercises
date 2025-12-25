@@ -2,6 +2,15 @@
   margin-top: 10px;
 }
 
+form {
+  width: 50%;
+}
+form fieldset {
+  border: none;
+}
+form input {
+  width: 75%;
+}
 form label {
   margin-right: 5px;
 }
@@ -12,4 +21,19 @@ p > button {
 
 ul {
   margin-top: 30px;
+}
+
+.notification {
+  background: lightgrey;
+  font-size: 20px;
+  border-style: solid;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+.error {
+  color: red;
+}
+.standard-notification {
+  color: green;
 }
