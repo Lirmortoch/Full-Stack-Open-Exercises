@@ -5,10 +5,12 @@ import loginService from './services/login'
 
 import './App.css'
 import BlogForm from './components/BlogForm'
+import Notification from './components/Notification'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
+  const [notification, setNotification] = useState({message: null, type: 'standard-notification'});
 
   const usernameRef = useRef()
   const passwordRef = useRef()
@@ -29,6 +31,10 @@ const App = () => {
     )  
   }, [])
 
+  function handleSetNotification(message, type) {
+    setNotification({message, type});
+    setTimeout(() => setNotification({message: null, type: 'standard-notification'}), 3000);
+  }
   async function handleLogin(e) {
     e.preventDefault()
 
@@ -45,9 +51,15 @@ const App = () => {
 
       usernameRef.current.value = ''
       passwordRef.current.value = ''
+
+      handleSetNotification(
+        `You'are successfully logged in`, 
+        'standard-notification'
+      );
     }
     catch(error) {
       console.log('wrong credentials', error.message)
+      handleSetNotification('wrong username or password', 'error');
     }
   }
   function handleLogout() {
@@ -68,9 +80,15 @@ const App = () => {
       
       const returnedBlog = await blogService.createNewBlog(blog);
       setBlogs(prevBlogs => prevBlogs.concat(returnedBlog))
+
+      handleSetNotification(
+        `a new blog "${blog.title}" by ${blog.author} added`, 
+        'standard-notification'
+      );
     }
     catch (error) {
       console.log('something went wrong: ', error);
+      handleSetNotification('something went wrong', 'error');
     }
 
     title.current.value = '';
@@ -80,7 +98,6 @@ const App = () => {
 
   let mainElem = (
     <>
-      <h2>log in to application</h2>
       <form onSubmit={handleLogin}>
         <fieldset>
           <label htmlFor='user-form-username'>username</label>
@@ -98,7 +115,6 @@ const App = () => {
   if (user) {
     mainElem = (
       <>
-        <h2>blogs</h2>
         <p>
           {user.name} logged in 
           <button onClick={handleLogout}>Logout</button>
@@ -118,6 +134,8 @@ const App = () => {
   return (
     <main>
       <section>
+        <h2>{user ? "blogs" : "log in to application"}</h2>
+        <Notification message={notification.message} type={notification.type} />
         {mainElem}
       </section>
     </main>

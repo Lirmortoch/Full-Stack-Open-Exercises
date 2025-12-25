@@ -1,9 +1,9 @@
-export default function Notification({ message, style }) {
+export default function Notification({ message, type }) {
   if (message === null) {
     return;
   }
 
-  const notificationClassName = `notification ${style}`;
+  const notificationClassName = `notification ${type}`;
 
   return (
     <p className={notificationClassName}>
