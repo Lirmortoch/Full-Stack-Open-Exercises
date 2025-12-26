@@ -6,14 +6,16 @@ import loginService from './services/login'
 import './App.css'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
+import UserForm from './components/UserForm'
+import Togglable from './components/Togglable'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
-  const [user, setUser] = useState(null)
+  const [blogs, setBlogs] = useState([]);
+  const [user, setUser] = useState(null);
   const [notification, setNotification] = useState({message: null, type: 'standard-notification'});
 
-  const usernameRef = useRef()
-  const passwordRef = useRef()
+  const noteFormRef = useRef();
+  const userFormRef = useRef();
 
   useEffect(() => {
     const loggedUserJSON = localStorage.getItem('blogAppUser')
@@ -35,7 +37,7 @@ const App = () => {
     setNotification({message, type});
     setTimeout(() => setNotification({message: null, type: 'standard-notification'}), 3000);
   }
-  async function handleLogin(e) {
+  async function handleLogin(e, usernameRef, passwordRef) {
     e.preventDefault()
 
     try {
@@ -97,20 +99,7 @@ const App = () => {
   }
 
   let mainElem = (
-    <>
-      <form onSubmit={handleLogin}>
-        <fieldset>
-          <label htmlFor='user-form-username'>username</label>
-          <input type='text' id='user-form-username' name='user-form-username' ref={usernameRef} />
-        </fieldset>
-
-        <fieldset>
-          <label htmlFor='user-form-password'>password</label>
-          <input type='password' id='user-form-password' name='user-form-password' ref={passwordRef} />
-        </fieldset>
-        <button type='submit' className='user-form__btn form__btn'>Log In</button>
-      </form>
-    </>
+    <UserForm handleLogin={handleLogin} />
   )
   if (user) {
     mainElem = (
@@ -120,7 +109,9 @@ const App = () => {
           <button onClick={handleLogout}>Logout</button>
         </p>
         
-        <BlogForm handleAddBlog={handleAddBlog} />
+        <Togglable buttonLabel={'create new blog'} ref={noteFormRef} >
+          <BlogForm handleAddBlog={handleAddBlog} />
+        </Togglable>
 
         <ul>
           {blogs.map(blog =>
@@ -133,8 +124,8 @@ const App = () => {
 
   return (
     <main>
+    <h1>Blogs</h1>
       <section>
-        <h2>{user ? "blogs" : "log in to application"}</h2>
         <Notification message={notification.message} type={notification.type} />
         {mainElem}
       </section>
