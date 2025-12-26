@@ -15,7 +15,6 @@ const App = () => {
   const [notification, setNotification] = useState({message: null, type: 'standard-notification'});
 
   const noteFormRef = useRef();
-  const userFormRef = useRef();
 
   useEffect(() => {
     const loggedUserJSON = localStorage.getItem('blogAppUser')
@@ -87,6 +86,8 @@ const App = () => {
         `a new blog "${blog.title}" by ${blog.author} added`, 
         'standard-notification'
       );
+
+      noteFormRef.current.handleToggleVisibility();
     }
     catch (error) {
       console.log('something went wrong: ', error);

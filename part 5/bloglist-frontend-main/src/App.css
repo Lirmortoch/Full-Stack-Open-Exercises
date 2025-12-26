@@ -21,6 +21,11 @@ p > button {
 
 ul {
   margin-top: 30px;
+  padding-left: 0;
+  list-style: none;
+}
+li button {
+  margin-left: 10px;
 }
 
 .notification {
@@ -36,4 +41,13 @@ ul {
 }
 .standard-notification {
   color: green;
+}
+
+.blog {
+  padding-top: 10px;
+  padding-left: 2px;
+
+  border: solid 1px black;
+
+  margin-bottom: 5px;
 }

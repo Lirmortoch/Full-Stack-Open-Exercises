@@ -1,6 +1,5 @@
 import { useImperativeHandle, useState } from "react";
 
-
 export default function Togglable({ children, ref, buttonLabel }) {
   const [visibility, setVisibility] = useState(false);
 
