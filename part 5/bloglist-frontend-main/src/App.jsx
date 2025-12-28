@@ -28,7 +28,7 @@ const App = () => {
   }, [])
   useEffect(() => {
     blogService.getAllBlogs().then(blogs => {
-      setBlogs( blogs )
+      setBlogs( blogs.sort((a, b) => b.likes - a.likes) )
     })  
   }, [])
 
@@ -80,7 +80,7 @@ const App = () => {
       };
       
       const returnedBlog = await blogService.createNewBlog(blog);
-      setBlogs(prevBlogs => prevBlogs.concat(returnedBlog))
+      setBlogs(prevBlogs => prevBlogs.concat(returnedBlog).sort((a, b) => b.likes - a.likes))
 
       handleSetNotification(
         `a new blog "${blog.title}" by ${blog.author} added`, 
@@ -104,7 +104,7 @@ const App = () => {
     };
 
     const updatedBlog = await blogService.updateBlog(id, newBlog);
-    setBlogs(prevBlogs => prevBlogs.filter(blog => blog.id !== id).concat(updatedBlog));
+    setBlogs(prevBlogs => prevBlogs.filter(blog => blog.id !== id).concat(updatedBlog).sort((a, b) => b.likes - a.likes));
   }
 
   let mainElem = (
