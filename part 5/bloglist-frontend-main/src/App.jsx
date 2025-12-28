@@ -36,6 +36,13 @@ const App = () => {
     setNotification({message, type});
     setTimeout(() => setNotification({message: null, type: 'standard-notification'}), 3000);
   }
+  function handleLogout() {
+    localStorage.removeItem('blogAppUser');
+
+    setUser(null);
+    blogService.setToken(null);
+  }
+
   async function handleLogin(e, usernameRef, passwordRef) {
     e.preventDefault()
 
@@ -62,12 +69,6 @@ const App = () => {
       console.log('wrong credentials', error.message)
       handleSetNotification('wrong username or password', 'error');
     }
-  }
-  function handleLogout() {
-    localStorage.removeItem('blogAppUser');
-
-    setUser(null);
-    blogService.setToken(null);
   }
   async function handleAddBlog(e, title, author, url) {
     e.preventDefault()
@@ -99,12 +100,37 @@ const App = () => {
     url.current.value = '';
   }
   async function handleLikeBlog(id, blog) {
-    const newBlog  = {
-      likes: blog.likes + 1,
-    };
+    try {
+      const newBlog  = {
+        likes: blog.likes + 1,
+      };
 
-    const updatedBlog = await blogService.updateBlog(id, newBlog);
-    setBlogs(prevBlogs => prevBlogs.filter(blog => blog.id !== id).concat(updatedBlog).sort((a, b) => b.likes - a.likes));
+      const updatedBlog = await blogService.updateBlog(id, newBlog);
+      setBlogs(prevBlogs => prevBlogs.filter(blog => blog.id !== id).concat(updatedBlog).sort((a, b) => b.likes - a.likes));    
+    } catch (error) {
+      console.log('something went wrong: ', error);
+      handleSetNotification('something went wrong', 'error');
+    }
+  }
+  async function handleDeleteBlog(id, blog) {
+    const isDelete = window.confirm(`Remove blog "${blog.title}" by ${blog.author}?`);
+
+    if (isDelete) {
+      try {
+        const data = await blogService.deleteBlog(id);
+
+        handleSetNotification(
+          `a blog "${blog.title}" was deleted`, 
+          'standard-notification'
+        );
+
+        setBlogs(prevBlogs => prevBlogs.filter(bl => bl.id !== id))
+      } 
+      catch (error) {
+        console.log('something went wrong: ', error);
+        handleSetNotification('something went wrong', 'error');
+      }
+    }
   }
 
   let mainElem = (
@@ -124,7 +150,7 @@ const App = () => {
 
         <ul>
           {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} handleLikeBlog={handleLikeBlog} />
+            <Blog key={blog.id} blog={blog} handleLikeBlog={handleLikeBlog} handleDeleteBlog={handleDeleteBlog} name={user.name} />
           )}
         </ul>
       </>
