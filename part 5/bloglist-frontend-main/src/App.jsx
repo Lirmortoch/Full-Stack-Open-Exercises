@@ -70,6 +70,7 @@ const App = () => {
       handleSetNotification('wrong username or password', 'error');
     }
   }
+  
   async function handleAddBlog(e, title, author, url) {
     e.preventDefault()
 
@@ -91,6 +92,8 @@ const App = () => {
       noteFormRef.current.handleToggleVisibility();
     }
     catch (error) {
+      setBlogs(blogs);
+
       console.log('something went wrong: ', error);
       handleSetNotification('something went wrong', 'error');
     }
@@ -108,6 +111,8 @@ const App = () => {
       const updatedBlog = await blogService.updateBlog(id, newBlog);
       setBlogs(prevBlogs => prevBlogs.filter(blog => blog.id !== id).concat(updatedBlog).sort((a, b) => b.likes - a.likes));    
     } catch (error) {
+      setBlogs(blogs);
+
       console.log('something went wrong: ', error);
       handleSetNotification('something went wrong', 'error');
     }
@@ -127,6 +132,8 @@ const App = () => {
         setBlogs(prevBlogs => prevBlogs.filter(bl => bl.id !== id))
       } 
       catch (error) {
+        setBlogs(blogs);
+
         console.log('something went wrong: ', error);
         handleSetNotification('something went wrong', 'error');
       }
