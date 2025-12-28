@@ -27,9 +27,9 @@ const App = () => {
     }
   }, [])
   useEffect(() => {
-    blogService.getAllBlogs().then(blogs =>
+    blogService.getAllBlogs().then(blogs => {
       setBlogs( blogs )
-    )  
+    })  
   }, [])
 
   function handleSetNotification(message, type) {
@@ -98,6 +98,14 @@ const App = () => {
     author.current.value = '';
     url.current.value = '';
   }
+  async function handleLikeBlog(id, blog) {
+    const newBlog  = {
+      likes: blog.likes + 1,
+    };
+
+    const updatedBlog = await blogService.updateBlog(id, newBlog);
+    setBlogs(prevBlogs => prevBlogs.filter(blog => blog.id !== id).concat(updatedBlog));
+  }
 
   let mainElem = (
     <UserForm handleLogin={handleLogin} />
@@ -116,7 +124,7 @@ const App = () => {
 
         <ul>
           {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} />
+            <Blog key={blog.id} blog={blog} handleLikeBlog={handleLikeBlog} />
           )}
         </ul>
       </>

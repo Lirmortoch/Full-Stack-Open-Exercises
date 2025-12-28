@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function Blog ({ blog }) {
+export default function Blog ({ blog, handleLikeBlog }) {
   const [visibility, setVisibility] = useState(false);
 
   const hideWhenVisible = {display: visibility ? 'none' : ''};
@@ -24,7 +24,7 @@ export default function Blog ({ blog }) {
         <a href={blog.url}>{blog.url}</a>
         <p>
           likes {blog.likes} 
-          <button>like</button>
+          <button onClick={() => handleLikeBlog(blog.id, blog)}>like</button>
         </p>
         <p>{blog.author}</p>
       </li>

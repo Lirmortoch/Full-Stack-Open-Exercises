@@ -60,7 +60,7 @@ BlogsRouter.delete('/:id', userExtractor, async (request, response, next) => {
   response.status(204).end();
 });
 
-BlogsRouter.put('/:id', async (request, response, next) => {
+BlogsRouter.put('/:id', userExtractor, async (request, response, next) => {
   const blog = await Blog.findByIdAndUpdate(
     request.params.id,
     request.body,
