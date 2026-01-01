@@ -1,19 +1,30 @@
 import { useRef } from "react";
 
-export default function BlogForm({ handleAddBlog }) {
-  const titleRef= useRef()
-  const authorRef = useRef()
-  const urlRef = useRef()
+export default function BlogForm({ addBlog }) {
+  const titleRef= useRef();
+  const authorRef = useRef();
+  const urlRef = useRef();
+
+  function handleAddBlog(e) {
+    e.preventDefault();
+
+    const blog  = {
+      title: titleRef.current.value,
+      author: authorRef.current.value,
+      url: urlRef.current.value,
+    };
+
+    addBlog(blog);
+
+    titleRef.current.value = '';
+    authorRef.current.value = '';
+    urlRef.current.value = '';
+  }
 
   return (
     <>
       <h2>create new</h2>
-      <form onSubmit={(e) => handleAddBlog(
-        e,
-        titleRef,
-        authorRef,
-        urlRef
-      )}>
+      <form onSubmit={handleAddBlog}>
         <fieldset>
           <label htmlFor="blog-form-title">title</label>
           <input type="text" id="blog-form-title" name="blog-form-title" ref={titleRef} />

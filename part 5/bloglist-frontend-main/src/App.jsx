@@ -43,22 +43,14 @@ const App = () => {
     blogService.setToken(null);
   }
 
-  async function handleLogin(e, usernameRef, passwordRef) {
-    e.preventDefault()
-
+  async function handleLogin(username, password) {
     try {
-      const username = usernameRef.current.value
-      const password = passwordRef.current.value
-
-      const user = await loginService.login({ username, password })
+      const user = await loginService.login({ username, password });
 
       localStorage.setItem('blogAppUser', JSON.stringify(user));
-      blogService.setToken(user.token)
+      blogService.setToken(user.token);
 
-      setUser(user)
-
-      usernameRef.current.value = ''
-      passwordRef.current.value = ''
+      setUser(user);
 
       handleSetNotification(
         `You'are successfully logged in`, 
@@ -66,21 +58,13 @@ const App = () => {
       );
     }
     catch(error) {
-      console.log('wrong credentials', error.message)
+      console.log('wrong credentials', error.message);
       handleSetNotification('wrong username or password', 'error');
     }
   }
   
-  async function handleAddBlog(e, title, author, url) {
-    e.preventDefault()
-
+  async function handleAddBlog(blog) {
     try {
-      const blog  = {
-        title: title.current.value,
-        author: author.current.value,
-        url: url.current.value,
-      };
-      
       const returnedBlog = await blogService.createNewBlog(blog);
       setBlogs(prevBlogs => prevBlogs.concat(returnedBlog).sort((a, b) => b.likes - a.likes))
 
@@ -97,10 +81,6 @@ const App = () => {
       console.log('something went wrong: ', error);
       handleSetNotification('something went wrong', 'error');
     }
-
-    title.current.value = '';
-    author.current.value = '';
-    url.current.value = '';
   }
   async function handleLikeBlog(id, blog) {
     try {
@@ -141,7 +121,7 @@ const App = () => {
   }
 
   let mainElem = (
-    <UserForm handleLogin={handleLogin} />
+    <UserForm login={handleLogin} />
   )
   if (user) {
     mainElem = (
@@ -152,7 +132,7 @@ const App = () => {
         </p>
         
         <Togglable buttonLabel={'create new blog'} ref={noteFormRef} >
-          <BlogForm handleAddBlog={handleAddBlog} />
+          <BlogForm addBlog={handleAddBlog} />
         </Togglable>
 
         <ul>
