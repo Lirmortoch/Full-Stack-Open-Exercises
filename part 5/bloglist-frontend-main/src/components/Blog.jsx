@@ -16,6 +16,7 @@ export default function Blog ({ blog, handleLikeBlog, handleDeleteBlog, name }) 
         {blog.title} - {blog.author} 
         <button onClick={handleToggleVisibility}>view</button>
       </li>
+      
       <li style={showWhenVisible}>
         <p>
           {blog.title} - {blog.author}
