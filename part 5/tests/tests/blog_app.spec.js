@@ -1,6 +1,6 @@
 // @ts-check
 const { test, describe, expect, beforeEach } = require('@playwright/test');
-const { loginWith } = require('./helper');
+const { loginWith, createBlogWith } = require('./helper');
 
 describe('Blog app', () => {
   const usernameForTesting = 'john_doe';
@@ -45,15 +45,19 @@ describe('Blog app', () => {
     });
 
     test('a new blog can be created', async ({ page }) => {
-      await page.getByRole('button', { name: 'create new blog' }).click();
+      createBlogWith(page, 'Why should start using playwright for E2E testing in 2026?', 'https://playwringt-in-2026.com', nameForTesting);
 
-      await page.getByLabel('title').fill('Why should start using playwright for E2E testing in 2026?');
-      await page.getByLabel('author').fill(nameForTesting);
-      await page.getByLabel('url').fill('https://playwringt-in-2026.com');
+      await expect(page.getByText(`Why should start using playwright for E2E testing in 2026? - ${nameForTesting}`).first()).toBeVisible();
+    });
 
-      await page.getByRole('button', { name: 'Create' }).click();
+    test('blog can be liked', async ({ page }) => {
+      createBlogWith(page, 'Why should start using playwright for E2E testing in 2025?', 'https://playwringt-in-2025.com', nameForTesting);
 
-      await expect(page.getByText('Why should start using playwright for E2E testing in 2026? - John Doe').first()).toBeVisible();
+      await page.getByRole('button', { name: 'view' }).click();
+      await expect(page.getByText('likes 0')).toBeVisible();
+
+      await page.getByRole('button', { name: 'like' }).click();
+      await expect(page.getByText('likes 1')).toBeVisible();
     });
   });
 });
