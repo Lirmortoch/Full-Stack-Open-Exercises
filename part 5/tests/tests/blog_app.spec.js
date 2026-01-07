@@ -38,4 +38,22 @@ describe('Blog app', () => {
       await expect(page.getByText('wrong username or password')).toBeVisible();
     });
   });
+
+  describe('when logged in', () => {
+    beforeEach(async ({ page }) => {
+      loginWith(page, usernameForTesting, passwordForTesting);
+    });
+
+    test('a new blog can be created', async ({ page }) => {
+      await page.getByRole('button', { name: 'create new blog' }).click();
+
+      await page.getByLabel('title').fill('Why should start using playwright for E2E testing in 2026?');
+      await page.getByLabel('author').fill(nameForTesting);
+      await page.getByLabel('url').fill('https://playwringt-in-2026.com');
+
+      await page.getByRole('button', { name: 'Create' }).click();
+
+      await expect(page.getByText('Why should start using playwright for E2E testing in 2026? - John Doe').first()).toBeVisible();
+    });
+  });
 });
