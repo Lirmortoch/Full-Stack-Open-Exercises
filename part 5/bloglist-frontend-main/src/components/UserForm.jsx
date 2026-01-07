@@ -29,7 +29,7 @@ export default function UserForm({ login }) {
           <label htmlFor='user-form-password'>password</label>
           <input type='password' id='user-form-password' name='user-form-password' ref={passwordRef} />
         </fieldset>
-        <button type='submit' className='user-form__btn form__btn'>Log In</button>
+        <button type='submit' className='user-form__btn form__btn'>Login</button>
       </form>
     </>
   );

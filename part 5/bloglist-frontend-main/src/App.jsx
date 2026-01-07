@@ -58,7 +58,7 @@ const App = () => {
       );
     }
     catch(error) {
-      console.log('wrong credentials', error.message);
+      console.log('wrong username or password', error.message);
       handleSetNotification('wrong username or password', 'error');
     }
   }
