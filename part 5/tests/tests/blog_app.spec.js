@@ -60,8 +60,6 @@ describe('Blog app', () => {
       test('blog can be liked', async ({ page }) => {
         const otherBlogElem = page.getByRole('listitem').filter({ hasText: 'first blog' });
 
-        await page.pause();
-
         await otherBlogElem.getByRole('button', { name: 'view' }).click();
         await expect(page.getByRole('listitem').filter({ hasText: 'first blog' }).getByText('likes 0')).toBeVisible();
 
@@ -72,17 +70,15 @@ describe('Blog app', () => {
       test('user can see \'delete\' button', async ({ page }) => {
         const otherBlogElem = page.getByRole('listitem').filter({ hasText: 'second blog' });
 
-        await page.pause();
-
         await otherBlogElem.getByRole('button', { name: 'view' }).click();
 
-        await expect(otherBlogElem.getByRole('button', { name: 'remove' })).not.toBeVisible();
+        await expect(otherBlogElem.getByRole('button', { name: 'remove' })).toBeVisible();
       });
 
       test('user can remove their own blogs', async ({ page }) => {
         const otherBlogElem = page.getByRole('listitem').filter({ hasText: 'second blog' });
 
-        await page.pause();
+        await otherBlogElem.getByRole('button', { name: 'view' }).click();
 
         page.once('dialog', dialog => dialog.accept());
 
