@@ -26,8 +26,10 @@ export default function Blog ({ blog, handleLikeBlog, handleDeleteBlog, name }) 
         <a href={blog.url}>{blog.url}</a>
 
         <p>
-          likes {blog.likes} 
-          <button onClick={() => handleLikeBlog(blog.id, blog)}>like</button>
+          <span>likes {blog.likes}</span> 
+          <span>
+            <button onClick={() => handleLikeBlog(blog.id, blog)}>like</button>
+          </span>
         </p>
 
         <p>{blog.author}</p>

@@ -27,13 +27,13 @@ describe('Blog app', () => {
 
   describe('Login', () => {
     test('succeeds with correct credentials', async ({ page }) => {
-      loginWith(page, usernameForTesting, passwordForTesting);
+      await loginWith(page, usernameForTesting, passwordForTesting);
 
       await expect(page.getByText(`${nameForTesting} logged in`)).toBeVisible();
     });
 
     test('fails with wrong credentials', async ({ page }) => {
-      loginWith(page, 'josth_eod', 'screrg244213');
+      await loginWith(page, 'josth_eod', 'screrg244213');
 
       await expect(page.getByText('wrong username or password')).toBeVisible();
     });
@@ -41,23 +41,48 @@ describe('Blog app', () => {
 
   describe('when logged in', () => {
     beforeEach(async ({ page }) => {
-      loginWith(page, usernameForTesting, passwordForTesting);
+      await loginWith(page, usernameForTesting, passwordForTesting);
     });
 
     test('a new blog can be created', async ({ page }) => {
-      createBlogWith(page, 'Why should start using playwright for E2E testing in 2026?', 'https://playwringt-in-2026.com', nameForTesting);
+      await createBlogWith(page, 'Why should start using playwright for E2E testing in 2026?', 'https://playwringt-in-2026.com', nameForTesting);
 
       await expect(page.getByText(`Why should start using playwright for E2E testing in 2026? - ${nameForTesting}`).first()).toBeVisible();
     });
 
-    test('blog can be liked', async ({ page }) => {
-      createBlogWith(page, 'Why should start using playwright for E2E testing in 2025?', 'https://playwringt-in-2025.com', nameForTesting);
+    describe('when several blogs exists', () => {
+      beforeEach(async ({ page }) => {
+        await createBlogWith(page, 'first blog', 'https://first-blog.com', nameForTesting);
+        await createBlogWith(page, 'second blog', 'https://second-blog.com', nameForTesting);
+        await createBlogWith(page, 'third blog', 'https://third-blog.com', nameForTesting);
+      });
 
-      await page.getByRole('button', { name: 'view' }).click();
-      await expect(page.getByText('likes 0')).toBeVisible();
+      test('blog can be liked', async ({ page }) => {
+        const otherBlogElem = page.getByRole('listitem').filter({ hasText: 'first blog' });
 
-      await page.getByRole('button', { name: 'like' }).click();
-      await expect(page.getByText('likes 1')).toBeVisible();
+        await page.pause();
+
+        await otherBlogElem.getByRole('button', { name: 'view' }).click();
+        await expect(otherBlogElem.getByText('likes 0')).toBeVisible();
+
+        await otherBlogElem.getByRole('button', { name: 'like' }).click();
+        await expect(otherBlogElem.getByText('likes 1')).toBeVisible();
+      });
+
+      test('user can see \'delete\' button and remove their own blogs', async ({ page }) => {
+        const otherBlogElem = page.getByRole('listitem').filter({ hasText: 'second blog' });
+
+        await page.pause();
+
+        await otherBlogElem.getByRole('button', { name: 'view' }).click();
+        await expect(otherBlogElem.getByRole('button', { name: 'remove' })).toBeVisible();
+
+        page.once('dialog', dialog => dialog.accept());
+
+        await otherBlogElem.getByRole('button', { name: 'remove' }).click();
+
+        await expect(page.getByRole('listitem').filter({ hasText: 'second blog' })).toHaveCount(0);
+      });
     });
   });
 });
