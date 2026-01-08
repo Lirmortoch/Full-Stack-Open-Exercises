@@ -12,14 +12,14 @@ export default function Blog ({ blog, handleLikeBlog, handleDeleteBlog, name }) 
   
   return (
     <div className="blog">
-      <li style={hideWhenVisible}>
-        {blog.title} - {blog.author} 
+      <li style={hideWhenVisible} className="blog-title">
+        <span className="blog-title__content">{blog.title} - {blog.author}</span>
         <button onClick={handleToggleVisibility}>view</button>
       </li>
       
       <li style={showWhenVisible}>
-        <p>
-          {blog.title} - {blog.author}
+        <p className="blog-title">
+          <span className="blog-title__content">{blog.title} - {blog.author}</span>
           <button onClick={handleToggleVisibility}>hide</button>
         </p>
 

@@ -63,10 +63,10 @@ describe('Blog app', () => {
         await page.pause();
 
         await otherBlogElem.getByRole('button', { name: 'view' }).click();
-        await expect(otherBlogElem.getByText('likes 0')).toBeVisible();
+        await expect(page.getByRole('listitem').filter({ hasText: 'first blog' }).getByText('likes 0')).toBeVisible();
 
         await otherBlogElem.getByRole('button', { name: 'like' }).click();
-        await expect(otherBlogElem.getByText('likes 1')).toBeVisible();
+        await expect(page.getByRole('listitem').filter({ hasText: 'first blog' }).getByText('likes 1')).toBeVisible();
       });
 
       test('user can see \'delete\' button', async ({ page }) => {
@@ -91,7 +91,22 @@ describe('Blog app', () => {
         await expect(page.getByRole('listitem').filter({ hasText: 'second blog' })).toHaveCount(0);
       });
 
-      
+      test('sorting blogs by likes works', async ({ page }) => {
+        const otherBlogElem = page.getByRole('listitem').filter({ hasText: 'third blog' });
+
+        await otherBlogElem.getByRole('button', { name: 'view' }).click();
+
+        await otherBlogElem.getByRole('button', { name: 'like' }).click();
+        await expect(otherBlogElem).toContainText('likes 1');
+        await otherBlogElem.getByRole('button', { name: 'like' }).click();
+
+        const blogs = await page.getByRole('listitem');
+        await expect(blogs).toHaveText([
+          /third blog/,
+          /first blog/,
+          /second blog/,
+        ]);
+      });
     });
   });
 });
