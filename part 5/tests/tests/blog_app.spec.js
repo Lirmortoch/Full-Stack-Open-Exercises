@@ -69,13 +69,20 @@ describe('Blog app', () => {
         await expect(otherBlogElem.getByText('likes 1')).toBeVisible();
       });
 
-      test('user can see \'delete\' button and remove their own blogs', async ({ page }) => {
+      test('user can see \'delete\' button', async ({ page }) => {
         const otherBlogElem = page.getByRole('listitem').filter({ hasText: 'second blog' });
 
         await page.pause();
 
         await otherBlogElem.getByRole('button', { name: 'view' }).click();
-        await expect(otherBlogElem.getByRole('button', { name: 'remove' })).toBeVisible();
+
+        await expect(otherBlogElem.getByRole('button', { name: 'remove' })).not.toBeVisible();
+      });
+
+      test('user can remove their own blogs', async ({ page }) => {
+        const otherBlogElem = page.getByRole('listitem').filter({ hasText: 'second blog' });
+
+        await page.pause();
 
         page.once('dialog', dialog => dialog.accept());
 
@@ -83,6 +90,8 @@ describe('Blog app', () => {
 
         await expect(page.getByRole('listitem').filter({ hasText: 'second blog' })).toHaveCount(0);
       });
+
+      
     });
   });
 });
