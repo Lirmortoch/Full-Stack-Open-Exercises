@@ -41,7 +41,7 @@ const App = () => {
           </div>
         </div>
       ))}
-      
+
       <h2>create new</h2>
       <form onSubmit={e => newAnecdote(e)}>
         <div>
