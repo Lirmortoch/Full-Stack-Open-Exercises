@@ -1,8 +1,11 @@
+import { useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 const App = () => {
   const dispatch = useDispatch()
   const anecdotes = useSelector(state => state)
+
+  const newAnecdoteRef = useRef()
 
   const vote = id => {
     console.log('vote', id)
@@ -11,7 +14,18 @@ const App = () => {
       type: 'UPDATE_VOTES',
       payload: {
         id,
-      }
+      },
+    })
+  }
+
+  const newAnecdote = e => {
+    e.preventDefault()
+
+    dispatch({
+      type: 'NEW_ANECDOTE',
+      payload: {
+        anecdote: newAnecdoteRef.current.value,
+      },
     })
   }
 
@@ -27,12 +41,13 @@ const App = () => {
           </div>
         </div>
       ))}
+      
       <h2>create new</h2>
-      <form>
+      <form onSubmit={e => newAnecdote(e)}>
         <div>
-          <input />
+          <input ref={newAnecdoteRef} />
         </div>
-        <button>create</button>
+        <button type='submit'>create</button>
       </form>
     </div>
   )

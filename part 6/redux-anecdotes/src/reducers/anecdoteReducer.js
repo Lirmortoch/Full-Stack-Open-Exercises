@@ -34,6 +34,9 @@ const reducer = (state = initialState, action) => {
 
     return state.map(a => a.id !== id ? a : changedAnecdote)
   }
+  else if (action.type === 'NEW_ANECDOTE') {
+    return [...state, asObject(action.payload.anecdote)]
+  }
 
   return state
 }
