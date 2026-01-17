@@ -1,10 +1,18 @@
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 
 const App = () => {
+  const dispatch = useDispatch()
   const anecdotes = useSelector(state => state)
 
   const vote = id => {
     console.log('vote', id)
+
+    dispatch({
+      type: 'UPDATE_VOTES',
+      payload: {
+        id,
+      }
+    })
   }
 
   return (
