@@ -1,5 +1,6 @@
 import { useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import { updateVotes, addNewAnecdote } from './reducers/anecdoteReducer'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -10,23 +11,16 @@ const App = () => {
   const vote = id => {
     console.log('vote', id)
 
-    dispatch({
-      type: 'UPDATE_VOTES',
-      payload: {
-        id,
-      },
-    })
+    dispatch(updateVotes(id))
   }
 
   const newAnecdote = e => {
     e.preventDefault()
+    const anecdote = newAnecdoteRef.current.value
 
-    dispatch({
-      type: 'NEW_ANECDOTE',
-      payload: {
-        anecdote: newAnecdoteRef.current.value,
-      },
-    })
+    dispatch(addNewAnecdote(anecdote))
+
+    newAnecdoteRef.current.value = ''
   }
 
   return (
