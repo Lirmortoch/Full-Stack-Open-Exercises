@@ -6,7 +6,7 @@ export default function AnecdoteForm({ }) {
   const dispatch = useDispatch()
   const newAnecdoteRef = useRef()
 
-  const newAnecdote = e => {
+  const handleAddNewAnecdote = e => {
     e.preventDefault()
     const anecdote = newAnecdoteRef.current.value
 
@@ -18,7 +18,7 @@ export default function AnecdoteForm({ }) {
   return (
     <section>
       <h2>create new</h2>
-      <form onSubmit={e => newAnecdote(e)}>
+      <form onSubmit={e => handleAddNewAnecdote(e)}>
         <div>
           <input ref={newAnecdoteRef} />
         </div>

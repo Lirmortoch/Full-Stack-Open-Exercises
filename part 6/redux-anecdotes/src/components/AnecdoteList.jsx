@@ -3,9 +3,9 @@ import { updateVotes } from '../reducers/anecdoteReducer'
 
 export default function AnecdoteList({  }) {
   const dispatch = useDispatch()
-  const anecdotes = useSelector(state => state)
+  const anecdotes = useSelector(state => state.anecdotes)
 
-  const vote = id => {
+  const handleVote = id => {
     console.log('vote', id)
 
     dispatch(updateVotes(id))
@@ -19,7 +19,7 @@ export default function AnecdoteList({  }) {
           <div>{anecdote.content}</div>
           <div>
             has {anecdote.votes}
-            <button onClick={() => vote(anecdote.id)}>vote</button>
+            <button onClick={() => handleVote(anecdote.id)}>vote</button>
           </div>
         </div>
       ))}

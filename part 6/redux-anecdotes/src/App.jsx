@@ -4,7 +4,7 @@ import AnecdoteList from './components/AnecdoteList'
 const App = () => {
   return (
     <main>
-      <h1>Anecdotes</h1>
+      <h1>Anecdotes!</h1>
       
       <AnecdoteList/>
       <AnecdoteForm />
