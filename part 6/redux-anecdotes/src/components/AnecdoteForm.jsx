@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { useDispatch } from 'react-redux'
 import { appendNote } from '../reducers/anecdoteReducer'
-import { setNotification, removeNotification } from '../reducers/notificationReducer'
+import { showNotification } from '../reducers/notificationReducer'
 
 export default function AnecdoteForm({ }) {
   const dispatch = useDispatch()
@@ -12,9 +12,7 @@ export default function AnecdoteForm({ }) {
     const anecdote = newAnecdoteRef.current.value
 
     dispatch(appendNote(anecdote))
-    dispatch(setNotification('New anecdote was added'))
-    
-    setTimeout(() => dispatch(removeNotification()), 5000)
+    dispatch(showNotification('New anecdote was added'), 10)
 
     newAnecdoteRef.current.value = ''
   }
