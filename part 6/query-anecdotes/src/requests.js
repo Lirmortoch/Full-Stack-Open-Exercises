@@ -18,12 +18,13 @@ export const addNewAnecdote = async (newAnecdote) => {
   }
 
   const response = await fetch(baseUrl, options)
+  const data = await response.json()
 
   if (!response.ok) {
-    throw new Error('Failed to add new anecdote')
+    throw new Error(data.error)
   }
 
-  return await response.json()
+  return data
 }
 
 export const updateAnecdote = async (updatedAnecdote) => {

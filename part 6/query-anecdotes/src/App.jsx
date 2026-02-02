@@ -8,6 +8,8 @@ import { useContext } from 'react'
 
 import NotificationCtx from './NotificationContext'
 
+import { showNotification } from './utils/showNotification'
+
 const App = () => {
   const queryClient = useQueryClient()
   const { notificationDispatch } = useContext(NotificationCtx)
@@ -22,13 +24,7 @@ const App = () => {
   const handleVote = (anecdote) => {
     console.log('vote')
 
-    notificationDispatch({ 
-      type: 'SET', 
-      payload: {
-        message: `anecdote ${anecdote.content} voted`,
-      }, 
-    })
-    setTimeout(() => notificationDispatch({ type: 'CLEAR' }), 5000)
+    showNotification(notificationDispatch, `anecdote '${anecdote.content}' voted`, 5)
 
     updateVoteMutation.mutate({ ...anecdote, votes: anecdote.votes + 1, })
   }
