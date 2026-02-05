@@ -1,11 +1,12 @@
+/* eslint-disable react/prop-types */
 import { useState } from 'react'
 import {
   Routes, 
   Route,
   Link, 
-  useParams,
+  useMatch,
   useNavigate,
-} from 'react-router'
+} from 'react-router-dom'
 
 const Menu = () => {
   const padding = {
@@ -20,11 +21,37 @@ const Menu = () => {
   )
 }
 
+function Anecdote({ anecdote }) {
+  return (
+    <div>
+      <h2>{anecdote.content} by {anecdote.author}</h2>
+
+      <p>has {anecdote.votes} {anecdote.votes === 1 ? 'vote' : 'votes'}</p>
+      
+      <p>
+        for more info see 
+        <a href={anecdote.info}>
+          {anecdote.info}
+        </a>
+      </p>
+    </div>
+  )
+}
+
 const AnecdoteList = ({ anecdotes }) => (
   <div>
     <h2>Anecdotes</h2>
     <ul>
-      {anecdotes.map(anecdote => <li key={anecdote.id} >{anecdote.content}</li>)}
+      {
+        anecdotes.map(anecdote => {
+          return (
+              <li key={anecdote.id} >
+                <Link to={`/anecdotes/${anecdote.id}`}>{anecdote.content}</Link>
+              </li>
+            )
+          }
+        )
+      }
     </ul>
   </div>
 )
@@ -115,7 +142,10 @@ const App = () => {
     setAnecdotes(anecdotes.concat(anecdote))
   }
 
-  const anecdoteById = (id) => anecdotes.find(a => a.id === id)
+  const anecdoteById = (id) => anecdotes.find(a => a.id === Number(id))
+
+  const match = useMatch('/anecdotes/:id')
+  const anecdote = match ? anecdoteById(match.params.id) : null
 
   const vote = (id) => {
     const anecdote = anecdoteById(id)
@@ -136,6 +166,7 @@ const App = () => {
 
       <Routes>
         <Route path='/' element={<AnecdoteList anecdotes={anecdotes} />} />
+        <Route path='/anecdotes/:id' element={<Anecdote anecdote={anecdote} />} />
         <Route path='/about' element={<About />} />
         <Route path='/create' element={<CreateNew addNew={addNew} />} />
       </Routes>
