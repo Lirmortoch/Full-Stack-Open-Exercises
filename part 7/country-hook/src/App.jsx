@@ -27,11 +27,11 @@ const useCountry = (name) => {
       try {
         const data = (await axios.get(`https://studies.cs.helsinki.fi/restcountries/api/name/${name}`)).data
 
-        setCountry(data)
+        setCountry({ data, notFound: false })
       }
       catch(error) {
         console.error(error)
-        setCountry({ notFound: true })
+        setCountry({ data: null, notFound: true })
       }
     }
 
@@ -61,7 +61,7 @@ const Country = ({ country }) => {
       <h3>{country.name.common} </h3>
       <div>capital {country.capital[0]} </div>
       <div>population {country.population}</div> 
-      <img src={country.flags.svg} height='100' alt={`flag of ${country.flags.alt}`}/>  
+      <img src={country.flags.svg} height='100' alt={`${country.flags.alt}`}/>  
     </div>
   )
 }
@@ -83,7 +83,7 @@ const App = () => {
         <button>find</button>
       </form>
 
-      <Country country={country} />
+      <Country country={country.data} />
     </div>
   )
 }
