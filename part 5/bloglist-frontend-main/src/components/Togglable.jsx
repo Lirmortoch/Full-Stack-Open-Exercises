@@ -3,15 +3,15 @@ import { useImperativeHandle, useState } from "react";
 export default function Togglable({ children, ref, buttonLabel }) {
   const [visibility, setVisibility] = useState(false);
 
-  const hideWhenVisible = {display: visibility ? 'none' : ''};
-  const showWhenVisible = {display: visibility ? '' : 'none'};
+  const hideWhenVisible = { display: visibility ? "none" : "" };
+  const showWhenVisible = { display: visibility ? "" : "none" };
 
   function handleToggleVisibility() {
-    setVisibility(prevVisiStatus => !prevVisiStatus);
+    setVisibility((prevVisiStatus) => !prevVisiStatus);
   }
 
   useImperativeHandle(ref, () => {
-    return { handleToggleVisibility }
+    return { handleToggleVisibility };
   });
 
   return (
@@ -21,8 +21,10 @@ export default function Togglable({ children, ref, buttonLabel }) {
       </div>
       <div style={showWhenVisible}>
         {children}
-        <button onClick={handleToggleVisibility} className="cancel-btn">cancel</button>
+        <button onClick={handleToggleVisibility} className="cancel-btn">
+          cancel
+        </button>
       </div>
     </div>
-  )
+  );
 }

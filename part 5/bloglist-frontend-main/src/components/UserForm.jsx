@@ -12,8 +12,8 @@ export default function UserForm({ login }) {
 
     login(username, password);
 
-    usernameRef.current.value = '';
-    passwordRef.current.value = '';
+    usernameRef.current.value = "";
+    passwordRef.current.value = "";
   }
 
   return (
@@ -21,15 +21,27 @@ export default function UserForm({ login }) {
       <h2>log in to application</h2>
       <form onSubmit={handleLogin}>
         <fieldset>
-          <label htmlFor='user-form-username'>username</label>
-          <input type='text' id='user-form-username' name='user-form-username' ref={usernameRef} />
+          <label htmlFor="user-form-username">username</label>
+          <input
+            type="text"
+            id="user-form-username"
+            name="user-form-username"
+            ref={usernameRef}
+          />
         </fieldset>
 
         <fieldset>
-          <label htmlFor='user-form-password'>password</label>
-          <input type='password' id='user-form-password' name='user-form-password' ref={passwordRef} />
+          <label htmlFor="user-form-password">password</label>
+          <input
+            type="password"
+            id="user-form-password"
+            name="user-form-password"
+            ref={passwordRef}
+          />
         </fieldset>
-        <button type='submit' className='user-form__btn form__btn'>Login</button>
+        <button type="submit" className="user-form__btn form__btn">
+          Login
+        </button>
       </form>
     </>
   );

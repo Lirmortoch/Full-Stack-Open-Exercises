@@ -5,9 +5,5 @@ export default function Notification({ message, type }) {
 
   const notificationClassName = `notification ${type}`;
 
-  return (
-    <p className={notificationClassName}>
-      {message}
-    </p>
-  )
+  return <p className={notificationClassName}>{message}</p>;
 }

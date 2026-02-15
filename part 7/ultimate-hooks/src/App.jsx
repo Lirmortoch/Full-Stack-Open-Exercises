@@ -34,20 +34,16 @@ const useResource = (baseUrl) => {
     fetchData()
   }, [])
 
-  const create = (resource) => {
-    async function addNewData() {
-      try {
-        const returnedResource = await axios.post(baseUrl, resource)
-  
-        setResources((prevResources) => [...prevResources, returnedResource.data])
-      }
-      catch(error) {
-        console.error(error)
-        setResources(resources)
-      }
-    }
+  const create = async (resource) => {
+    try {
+      const returnedResource = await axios.post(baseUrl, resource)
 
-    addNewData()
+      setResources((prevResources) => [...prevResources, returnedResource.data])
+    }
+    catch(error) {
+      console.error(error)
+      setResources(resources)
+    }
   }
 
   const service = {
