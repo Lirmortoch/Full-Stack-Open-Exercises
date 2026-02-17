@@ -1,0 +1,97 @@
+[{
+  "_id": {
+    "$oid": "693ea34670688756e63970aa"
+  },
+  "username": "root",
+  "name": "Superuser",
+  "passwordHash": "$2b$10$CHs/JcN6kT9yXBDOF1QLuO0awRArD1cbtShQ1mADd6jqahqXNyUPC",
+  "blogs": [
+    {
+      "$oid": "694005d1454bc0cc0e1a2514"
+    },
+    {
+      "$oid": "69415cf404e89e1481aa5fe9"
+    },
+    {
+      "$oid": "69415fc8ba8c8e7bf810a5b2"
+    },
+    {
+      "$oid": "6943d53e8fd8a3a0629cb456"
+    },
+    {
+      "$oid": "6943d5ce6e36ba41b2e52bb5"
+    }
+  ],
+  "__v": 5
+},
+{
+  "_id": {
+    "$oid": "694a5d5f136b444d866bd183"
+  },
+  "username": "KujoJotaro321",
+  "name": "Jotaro Kujo",
+  "passwordHash": "$2b$10$r7U/6/Sf01qTqrJo/3E2Ke/ugF2It8yhm429K8xWkOYs3IWSH5nj.",
+  "blogs": [
+    {
+      "$oid": "694a5dd3136b444d866bd188"
+    },
+    {
+      "$oid": "694a5df3136b444d866bd18d"
+    },
+    {
+      "$oid": "694a5e11136b444d866bd192"
+    },
+    {
+      "$oid": "694a5e1a136b444d866bd197"
+    },
+    {
+      "$oid": "694a5e26136b444d866bd19c"
+    },
+    {
+      "$oid": "694a5e34136b444d866bd1a1"
+    },
+    {
+      "$oid": "694a5e40136b444d866bd1a6"
+    },
+    {
+      "$oid": "694a5e4a136b444d866bd1ab"
+    },
+    {
+      "$oid": "694a6387aa78b58c580dfb7f"
+    },
+    {
+      "$oid": "694d6eef3b6049347744fd5f"
+    },
+    {
+      "$oid": "694d70bb3b6049347744fd68"
+    },
+    {
+      "$oid": "694d712e3b6049347744fd6c"
+    },
+    {
+      "$oid": "694d71623b6049347744fd70"
+    },
+    {
+      "$oid": "694d71c99915aef7504674a1"
+    },
+    {
+      "$oid": "694d732e74a6171085fd6db9"
+    },
+    {
+      "$oid": "694d740774a6171085fd6dc5"
+    },
+    {
+      "$oid": "694d746074a6171085fd6dc9"
+    },
+    {
+      "$oid": "694d81d174a6171085fd6de5"
+    },
+    {
+      "$oid": "694d81eb74a6171085fd6ded"
+    },
+    {
+      "$oid": "69568807846123e0f10432db"
+    }
+  ],
+  "__v": 20
+}]
