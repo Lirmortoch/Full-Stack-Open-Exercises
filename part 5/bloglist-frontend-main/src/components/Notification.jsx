@@ -1,6 +1,10 @@
-export default function Notification({ message, type }) {
+import { useSelector } from "react-redux";
+
+export default function Notification({}) {
+  const { message, type } = useSelector(({ notification }) => notification);
+
   if (message === null) {
-    return;
+    return null;
   }
 
   const notificationClassName = `notification ${type}`;

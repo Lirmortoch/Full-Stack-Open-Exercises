@@ -1,21 +1,23 @@
 import { useState, useEffect, useRef } from "react";
+import { useDispatch } from "react-redux";
+
+import { showNotification } from "./reducers/notificationReducer";
+
 import Blog from "./components/Blog";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
-
-import "./App.css";
 import BlogForm from "./components/BlogForm";
 import Notification from "./components/Notification";
 import UserForm from "./components/UserForm";
 import Togglable from "./components/Togglable";
 
+import "./App.css";
+
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
-  const [notification, setNotification] = useState({
-    message: null,
-    type: "standard-notification",
-  });
+
+  const dispatch = useDispatch();
 
   const noteFormRef = useRef();
 
@@ -35,13 +37,6 @@ const App = () => {
     });
   }, []);
 
-  function handleSetNotification(message, type) {
-    setNotification({ message, type });
-    setTimeout(
-      () => setNotification({ message: null, type: "standard-notification" }),
-      3000,
-    );
-  }
   function handleLogout() {
     localStorage.removeItem("blogAppUser");
 
@@ -58,13 +53,20 @@ const App = () => {
 
       setUser(user);
 
-      handleSetNotification(
-        `You'are successfully logged in`,
-        "standard-notification",
+      dispatch(
+        showNotification(
+          {
+            message: `You'are successfully logged in`,
+            type: "standard-notification",
+          }, 5
+        ),
       );
     } catch (error) {
       console.log("wrong username or password", error.message);
-      handleSetNotification("wrong username or password", "error");
+      dispatch(showNotification({
+        message: "wrong username or password", 
+        type: "error",
+      }, 5));
     }
   }
 
@@ -75,9 +77,13 @@ const App = () => {
         prevBlogs.concat(returnedBlog).sort((a, b) => b.likes - a.likes),
       );
 
-      handleSetNotification(
-        `a new blog "${blog.title}" by ${blog.author} added`,
-        "standard-notification",
+      dispatch(
+        showNotification(
+          {
+            message: `a new blog "${blog.title}" by ${blog.author} added`,
+            type: "standard-notification",
+          }, 5
+        ),
       );
 
       noteFormRef.current.handleToggleVisibility();
@@ -85,7 +91,10 @@ const App = () => {
       setBlogs(blogs);
 
       console.log("something went wrong: ", error);
-      handleSetNotification("something went wrong", "error");
+      dispatch(showNotification({
+        message: "something went wrong", 
+        type: "error",
+      }, 5));
     }
   }
   async function handleLikeBlog(id, blog) {
@@ -105,7 +114,10 @@ const App = () => {
       setBlogs(blogs);
 
       console.log("something went wrong: ", error);
-      handleSetNotification("something went wrong", "error");
+      dispatch(showNotification({
+        message: "something went wrong", 
+        type: "error",
+      }, 5));
     }
   }
   async function handleDeleteBlog(id, blog) {
@@ -117,9 +129,13 @@ const App = () => {
       try {
         const data = await blogService.deleteBlog(id);
 
-        handleSetNotification(
-          `a blog "${blog.title}" was deleted`,
-          "standard-notification",
+        dispatch(
+          showNotification(
+            {
+              message: `a blog "${blog.title}" was deleted`,
+              type: "standard-notification",
+            }, 5
+          ),
         );
 
         setBlogs((prevBlogs) => prevBlogs.filter((bl) => bl.id !== id));
@@ -127,7 +143,9 @@ const App = () => {
         setBlogs(blogs);
 
         console.log("something went wrong: ", error);
-        handleSetNotification("something went wrong", "error");
+        dispatch(showNotification({
+          message: "something went wrong", 
+          type: "error"}, 5));
       }
     }
   }
@@ -164,7 +182,7 @@ const App = () => {
     <main>
       <h1>Blogs</h1>
       <section>
-        <Notification message={notification.message} type={notification.type} />
+        <Notification />
         {mainElem}
       </section>
     </main>
