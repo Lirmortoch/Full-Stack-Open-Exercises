@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { showNotification } from "./reducers/notificationReducer";
+import { initializeBlogs } from './reducers/blogReducer';
 
-import Blog from "./components/Blog";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 import BlogForm from "./components/BlogForm";
@@ -12,9 +12,9 @@ import UserForm from "./components/UserForm";
 import Togglable from "./components/Togglable";
 
 import "./App.css";
+import Blogs from "./components/Blogs";
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
 
   const dispatch = useDispatch();
@@ -31,11 +31,10 @@ const App = () => {
       setUser(parsedUser);
     }
   }, []);
+
   useEffect(() => {
-    blogService.getAllBlogs().then((blogs) => {
-      setBlogs(blogs.sort((a, b) => b.likes - a.likes));
-    });
-  }, []);
+    dispatch(initializeBlogs());
+  }, [dispatch]);
 
   function handleLogout() {
     localStorage.removeItem("blogAppUser");
@@ -163,17 +162,7 @@ const App = () => {
           <BlogForm addBlog={handleAddBlog} />
         </Togglable>
 
-        <ul>
-          {blogs.map((blog) => (
-            <Blog
-              key={blog.id}
-              blog={blog}
-              handleLikeBlog={handleLikeBlog}
-              handleDeleteBlog={handleDeleteBlog}
-              name={user.name}
-            />
-          ))}
-        </ul>
+        <Blogs user={user} />
       </>
     );
   }
