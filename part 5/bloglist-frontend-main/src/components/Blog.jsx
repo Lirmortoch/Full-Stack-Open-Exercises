@@ -1,7 +1,11 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { likeOneBlog, deleteOneBlog } from "../reducers/blogReducer";
 
-export default function Blog({ blog, handleLikeBlog, handleDeleteBlog, name }) {
+export default function Blog({ blog, name }) {
   const [visibility, setVisibility] = useState(false);
+
+  const dispatch = useDispatch();
 
   const hideWhenVisible = { display: visibility ? "none" : "" };
   const showWhenVisible = { display: visibility ? "" : "none" };
@@ -32,14 +36,14 @@ export default function Blog({ blog, handleLikeBlog, handleDeleteBlog, name }) {
         <p>
           <span>likes {blog.likes}</span>
           <span>
-            <button onClick={() => handleLikeBlog(blog.id, blog)}>like</button>
+            <button onClick={() => dispatch(likeOneBlog(blog))}>like</button>
           </span>
         </p>
 
         <p>{blog.author}</p>
 
         {blog.author === name && (
-          <button onClick={() => handleDeleteBlog(blog.id, blog)}>
+          <button onClick={() => dispatch(deleteOneBlog(blog))}>
             remove
           </button>
         )}

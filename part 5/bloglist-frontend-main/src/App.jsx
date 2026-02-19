@@ -69,86 +69,6 @@ const App = () => {
     }
   }
 
-  async function handleAddBlog(blog) {
-    try {
-      const returnedBlog = await blogService.createNewBlog(blog);
-      setBlogs((prevBlogs) =>
-        prevBlogs.concat(returnedBlog).sort((a, b) => b.likes - a.likes),
-      );
-
-      dispatch(
-        showNotification(
-          {
-            message: `a new blog "${blog.title}" by ${blog.author} added`,
-            type: "standard-notification",
-          }, 5
-        ),
-      );
-
-      noteFormRef.current.handleToggleVisibility();
-    } catch (error) {
-      setBlogs(blogs);
-
-      console.log("something went wrong: ", error);
-      dispatch(showNotification({
-        message: "something went wrong", 
-        type: "error",
-      }, 5));
-    }
-  }
-  async function handleLikeBlog(id, blog) {
-    try {
-      const newBlog = {
-        likes: blog.likes + 1,
-      };
-
-      const updatedBlog = await blogService.updateBlog(id, newBlog);
-      setBlogs((prevBlogs) =>
-        prevBlogs
-          .filter((blog) => blog.id !== id)
-          .concat(updatedBlog)
-          .sort((a, b) => b.likes - a.likes),
-      );
-    } catch (error) {
-      setBlogs(blogs);
-
-      console.log("something went wrong: ", error);
-      dispatch(showNotification({
-        message: "something went wrong", 
-        type: "error",
-      }, 5));
-    }
-  }
-  async function handleDeleteBlog(id, blog) {
-    const isDelete = window.confirm(
-      `Remove blog "${blog.title}" by ${blog.author}?`,
-    );
-
-    if (isDelete) {
-      try {
-        const data = await blogService.deleteBlog(id);
-
-        dispatch(
-          showNotification(
-            {
-              message: `a blog "${blog.title}" was deleted`,
-              type: "standard-notification",
-            }, 5
-          ),
-        );
-
-        setBlogs((prevBlogs) => prevBlogs.filter((bl) => bl.id !== id));
-      } catch (error) {
-        setBlogs(blogs);
-
-        console.log("something went wrong: ", error);
-        dispatch(showNotification({
-          message: "something went wrong", 
-          type: "error"}, 5));
-      }
-    }
-  }
-
   let mainElem = <UserForm login={handleLogin} />;
   if (user) {
     mainElem = (
@@ -159,7 +79,7 @@ const App = () => {
         </p>
 
         <Togglable buttonLabel={"create new blog"} ref={noteFormRef}>
-          <BlogForm addBlog={handleAddBlog} />
+          <BlogForm />
         </Togglable>
 
         <Blogs user={user} />

@@ -1,6 +1,10 @@
 import { useRef } from "react";
+import { useDispatch } from "react-redux";
+import { appendBlog } from "../reducers/blogReducer";
 
-export default function BlogForm({ addBlog }) {
+export default function BlogForm({}) {
+  const dispatch = useDispatch();
+
   const titleRef = useRef();
   const authorRef = useRef();
   const urlRef = useRef();
@@ -14,7 +18,7 @@ export default function BlogForm({ addBlog }) {
       url: urlRef.current.value,
     };
 
-    addBlog(blog);
+    dispatch(appendBlog(blog));
 
     titleRef.current.value = "";
     authorRef.current.value = "";
