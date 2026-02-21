@@ -13,76 +13,37 @@ import Togglable from "./components/Togglable";
 
 import "./App.css";
 import Blogs from "./components/Blogs";
+import { initializeUser, logout } from "./reducers/userReducer";
 
 const App = () => {
-  const [user, setUser] = useState(null);
+  const user = useSelector(({user}) => user);
 
   const dispatch = useDispatch();
 
-  const noteFormRef = useRef();
+  const blogFormRef = useRef();
 
   useEffect(() => {
-    const loggedUserJSON = localStorage.getItem("blogAppUser");
-
-    if (loggedUserJSON) {
-      const parsedUser = JSON.parse(loggedUserJSON);
-
-      blogService.setToken(parsedUser.token);
-      setUser(parsedUser);
-    }
-  }, []);
+    dispatch(initializeUser());
+  }, [dispatch]);
 
   useEffect(() => {
     dispatch(initializeBlogs());
   }, [dispatch]);
 
-  function handleLogout() {
-    localStorage.removeItem("blogAppUser");
-
-    setUser(null);
-    blogService.setToken(null);
-  }
-
-  async function handleLogin(username, password) {
-    try {
-      const user = await loginService.login({ username, password });
-
-      localStorage.setItem("blogAppUser", JSON.stringify(user));
-      blogService.setToken(user.token);
-
-      setUser(user);
-
-      dispatch(
-        showNotification(
-          {
-            message: `You'are successfully logged in`,
-            type: "standard-notification",
-          }, 5
-        ),
-      );
-    } catch (error) {
-      console.log("wrong username or password", error.message);
-      dispatch(showNotification({
-        message: "wrong username or password", 
-        type: "error",
-      }, 5));
-    }
-  }
-
-  let mainElem = <UserForm login={handleLogin} />;
+  let mainElem = <UserForm />;
   if (user) {
     mainElem = (
       <>
         <p>
           {user.name} logged in
-          <button onClick={handleLogout}>Logout</button>
+          <button onClick={logout}>Logout</button>
         </p>
 
-        <Togglable buttonLabel={"create new blog"} ref={noteFormRef}>
-          <BlogForm />
+        <Togglable buttonLabel={"create new blog"} ref={blogFormRef}>
+          <BlogForm blogFormRef={blogFormRef} />
         </Togglable>
 
-        <Blogs user={user} />
+        <Blogs />
       </>
     );
   }

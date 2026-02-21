@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { useDispatch } from "react-redux";
 import { appendBlog } from "../reducers/blogReducer";
 
-export default function BlogForm({}) {
+export default function BlogForm({ blogFormRef }) {
   const dispatch = useDispatch();
 
   const titleRef = useRef();
@@ -19,6 +19,7 @@ export default function BlogForm({}) {
     };
 
     dispatch(appendBlog(blog));
+    blogFormRef.current.handleToggleVisibility();
 
     titleRef.current.value = "";
     authorRef.current.value = "";

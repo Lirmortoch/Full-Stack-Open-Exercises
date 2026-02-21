@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import blogService from '../services/blogs';
+import { showNotification } from './notificationReducer';
 
 const blogSlice = createSlice({
   name: 'blogs',
@@ -19,12 +20,9 @@ const blogSlice = createSlice({
     },
     likeBlog(state, action) {
       const likedBlog = action.payload;
-      const likedIndex = state.findIndex(bl => bl.id === likedBlog.id);
-
-      const newState = [...state];
-      newState[likedIndex] = likedBlog;
-      
-      return newState.sort((a, b) => b.likes - a.likes);
+      return state
+        .map(blog => blog.id === likedBlog.id ? likedBlog : blog)
+        .sort((a, b) => b.likes - a.likes);
     },
   }
 });
@@ -40,29 +38,72 @@ const initializeBlogs = () => {
 
 const appendBlog = (blog) => {
   return async (dispatch) => {
-    const blog = await blogService.createNewBlog(blog);
-    dispatch(addNewBlog(blog));
+    try {
+      const newBlog = await blogService.createNewBlog(blog);
+      dispatch(addNewBlog(newBlog));
+      dispatch(
+        showNotification(
+          {
+            message: `a new blog "${blog.title}" by ${blog.author} has been added`,
+            type: "standard-notification",
+          }, 5
+        ),
+      );
+    }
+    catch(error) {
+      console.log("something went wrong: ", error);
+      dispatch(showNotification({
+        message: "something went wrong", 
+        type: "error",
+      }, 5));
+    }
   }
 }
 
 const deleteOneBlog = (blog) => {
   return async (dispatch) => {
-    await blogService.deleteBlog(blog.id);
-    dispatch(deleteBlog(blog));
+    try {
+      const isDelete = window.confirm(
+        `Remove blog "${blog.title}" by ${blog.author}?`,
+      );
+      if (isDelete) {
+        await blogService.deleteBlog(blog.id);
+        dispatch(deleteBlog(blog));
+        dispatch(
+        showNotification(
+          {
+            message: `a blog "${blog.title}" by ${blog.author} has been deleted`,
+            type: "standard-notification",
+          }, 5
+        ),
+      );
+      }
+    }
+    catch(error) {
+      console.log("something went wrong: ", error);
+      dispatch(showNotification({
+        message: "something went wrong", 
+        type: "error",
+      }, 5));
+    }
   }
 }
 
 const likeOneBlog = (blog) => {
   return async (dispatch) => {
-    const isDelete = window.confirm(
-      `Remove blog "${blog.title}" by ${blog.author}?`,
-    );
-
-    if (isDelete) {
-      const newBlog = { likes: blog.likes + 1}
-      const likedBlog = await blogService.updateBlog(blog.id, newBlog);
-      dispatch(likeBlog(likedBlog));
-    }
+      try {
+        const newBlog = { likes: blog.likes + 1}
+        const likedBlog = await blogService.updateBlog(blog.id, newBlog);
+        dispatch(likeBlog(likedBlog));
+      }
+      catch(error) {
+        console.log("something went wrong: ", error);
+        dispatch(showNotification({
+          message: "something went wrong", 
+          type: "error",
+        }, 5));
+      }
+    
   }
 }
 

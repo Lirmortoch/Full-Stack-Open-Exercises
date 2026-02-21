@@ -1,6 +1,10 @@
 import { useRef } from "react";
+import { useDispatch } from "react-redux";
+import { login } from "../reducers/userReducer";
 
-export default function UserForm({ login }) {
+export default function UserForm({}) {
+  const dispatch = useDispatch();
+
   const usernameRef = useRef();
   const passwordRef = useRef();
 
@@ -10,7 +14,7 @@ export default function UserForm({ login }) {
     const username = usernameRef.current.value;
     const password = passwordRef.current.value;
 
-    login(username, password);
+    dispatch(login(username, password));
 
     usernameRef.current.value = "";
     passwordRef.current.value = "";
