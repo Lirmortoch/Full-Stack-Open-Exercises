@@ -1,9 +1,9 @@
-import { createSlice } from '@reduxjs/toolkit';
-import blogService from '../services/blogs';
-import { showNotification } from './notificationReducer';
+import { createSlice } from "@reduxjs/toolkit";
+import blogService from "../services/blogs";
+import { showNotification } from "./notificationReducer";
 
 const blogSlice = createSlice({
-  name: 'blogs',
+  name: "blogs",
   initialState: [],
   reducers: {
     setBlogs(state, action) {
@@ -16,15 +16,15 @@ const blogSlice = createSlice({
     },
     deleteBlog(state, action) {
       const blog = action.payload;
-      return state.filter(bl => bl.id !== blog.id);
+      return state.filter((bl) => bl.id !== blog.id);
     },
     likeBlog(state, action) {
       const likedBlog = action.payload;
       return state
-        .map(blog => blog.id === likedBlog.id ? likedBlog : blog)
+        .map((blog) => (blog.id === likedBlog.id ? likedBlog : blog))
         .sort((a, b) => b.likes - a.likes);
     },
-  }
+  },
 });
 
 const { setBlogs, addNewBlog, deleteBlog, likeBlog } = blogSlice.actions;
@@ -33,8 +33,8 @@ const initializeBlogs = () => {
   return async (dispatch) => {
     const blogs = await blogService.getAllBlogs();
     dispatch(setBlogs(blogs));
-  }
-}
+  };
+};
 
 const appendBlog = (blog) => {
   return async (dispatch) => {
@@ -46,19 +46,24 @@ const appendBlog = (blog) => {
           {
             message: `a new blog "${blog.title}" by ${blog.author} has been added`,
             type: "standard-notification",
-          }, 5
+          },
+          5,
+        ),
+      );
+    } catch (error) {
+      console.log("something went wrong: ", error);
+      dispatch(
+        showNotification(
+          {
+            message: "something went wrong",
+            type: "error",
+          },
+          5,
         ),
       );
     }
-    catch(error) {
-      console.log("something went wrong: ", error);
-      dispatch(showNotification({
-        message: "something went wrong", 
-        type: "error",
-      }, 5));
-    }
-  }
-}
+  };
+};
 
 const deleteOneBlog = (blog) => {
   return async (dispatch) => {
@@ -70,42 +75,50 @@ const deleteOneBlog = (blog) => {
         await blogService.deleteBlog(blog.id);
         dispatch(deleteBlog(blog));
         dispatch(
+          showNotification(
+            {
+              message: `a blog "${blog.title}" by ${blog.author} has been deleted`,
+              type: "standard-notification",
+            },
+            5,
+          ),
+        );
+      }
+    } catch (error) {
+      console.log("something went wrong: ", error);
+      dispatch(
         showNotification(
           {
-            message: `a blog "${blog.title}" by ${blog.author} has been deleted`,
-            type: "standard-notification",
-          }, 5
+            message: "something went wrong",
+            type: "error",
+          },
+          5,
         ),
       );
-      }
     }
-    catch(error) {
-      console.log("something went wrong: ", error);
-      dispatch(showNotification({
-        message: "something went wrong", 
-        type: "error",
-      }, 5));
-    }
-  }
-}
+  };
+};
 
 const likeOneBlog = (blog) => {
   return async (dispatch) => {
-      try {
-        const newBlog = { likes: blog.likes + 1}
-        const likedBlog = await blogService.updateBlog(blog.id, newBlog);
-        dispatch(likeBlog(likedBlog));
-      }
-      catch(error) {
-        console.log("something went wrong: ", error);
-        dispatch(showNotification({
-          message: "something went wrong", 
-          type: "error",
-        }, 5));
-      }
-    
-  }
-}
+    try {
+      const newBlog = { likes: blog.likes + 1 };
+      const likedBlog = await blogService.updateBlog(blog.id, newBlog);
+      dispatch(likeBlog(likedBlog));
+    } catch (error) {
+      console.log("something went wrong: ", error);
+      dispatch(
+        showNotification(
+          {
+            message: "something went wrong",
+            type: "error",
+          },
+          5,
+        ),
+      );
+    }
+  };
+};
 
 export { initializeBlogs, appendBlog, deleteOneBlog, likeOneBlog };
 export default blogSlice.reducer;

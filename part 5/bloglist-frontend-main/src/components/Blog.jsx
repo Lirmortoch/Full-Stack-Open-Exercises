@@ -43,9 +43,7 @@ export default function Blog({ blog, name }) {
         <p>{blog.author}</p>
 
         {blog.author === name && (
-          <button onClick={() => dispatch(deleteOneBlog(blog))}>
-            remove
-          </button>
+          <button onClick={() => dispatch(deleteOneBlog(blog))}>remove</button>
         )}
       </li>
     </div>

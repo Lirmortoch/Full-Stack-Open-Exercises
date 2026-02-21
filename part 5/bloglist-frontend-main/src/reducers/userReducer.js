@@ -4,14 +4,14 @@ import blogService from "../services/blogs";
 import { showNotification } from "./notificationReducer";
 
 const userSlice = createSlice({
-  name: 'user',
+  name: "user",
   initialState: null,
   reducers: {
     setUser(state, action) {
       const user = action.payload;
       return user;
-    }
-  }
+    },
+  },
 });
 
 const { setUser } = userSlice.actions;
@@ -26,14 +26,14 @@ const initializeUser = () => {
       blogService.setToken(parsedUser.token);
       dispatch(setUser(parsedUser));
     }
-  }
-}
+  };
+};
 
 const login = (username, password) => {
   return async (dispatch) => {
     try {
       const user = await loginService.login({ username, password });
-      
+
       localStorage.setItem("blogAppUser", JSON.stringify(user));
       blogService.setToken(user.token);
 
@@ -44,28 +44,33 @@ const login = (username, password) => {
           {
             message: `You'are successfully logged in`,
             type: "standard-notification",
-          }, 5
+          },
+          5,
+        ),
+      );
+    } catch (error) {
+      console.log("wrong username or password", error.message);
+      dispatch(
+        showNotification(
+          {
+            message: "wrong username or password",
+            type: "error",
+          },
+          5,
         ),
       );
     }
-    catch(error) {
-      console.log("wrong username or password", error.message);
-      dispatch(showNotification({
-        message: "wrong username or password", 
-        type: "error",
-      }, 5));
-    }
-  }
-}
+  };
+};
 
 const logout = () => {
   return (dispatch) => {
     localStorage.removeItem("blogAppUser");
-    
+
     dispatch(setUser(null));
     blogService.setToken(null);
-  }
-}
+  };
+};
 
-export { login, logout, initializeUser }
+export { login, logout, initializeUser };
 export default userSlice.reducer;

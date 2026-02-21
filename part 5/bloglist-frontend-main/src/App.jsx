@@ -1,10 +1,8 @@
 import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { initializeBlogs } from './reducers/blogReducer';
+import { initializeBlogs } from "./reducers/blogReducer";
 
-import blogService from "./services/blogs";
-import loginService from "./services/login";
 import BlogForm from "./components/BlogForm";
 import Notification from "./components/Notification";
 import UserForm from "./components/UserForm";
@@ -15,7 +13,7 @@ import Blogs from "./components/Blogs";
 import { initializeUser, logout } from "./reducers/userReducer";
 
 const App = () => {
-  const user = useSelector(({user}) => user);
+  const user = useSelector(({ user }) => user);
 
   const dispatch = useDispatch();
 
