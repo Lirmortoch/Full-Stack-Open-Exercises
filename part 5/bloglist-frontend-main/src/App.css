@@ -53,3 +53,14 @@ li button {
 
   margin-bottom: 5px;
 }
+
+.table {
+  display: grid;
+  grid-template-areas: 
+    "table__col1 table__col2";
+  grid-template-columns: repeat(2, fit-content(100%));
+  column-gap: 5px;
+}
+.table__header {
+  font-weight: 700;
+}
