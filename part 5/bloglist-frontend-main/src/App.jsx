@@ -9,9 +9,11 @@ import Notification from "./components/Notification";
 import UserForm from "./components/UserForm";
 import Togglable from "./components/Togglable";
 import { NotificationContext } from "./store/NotificationContext";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
+  const queryClient = useQueryClient();
+
   const [user, setUser] = useState(null);
   const { showNotification } = useContext(NotificationContext);
 
@@ -27,11 +29,38 @@ const App = () => {
       setUser(parsedUser);
     }
   }, []);
-  useEffect(() => {
-    blogService.getAllBlogs().then((blogs) => {
-      setBlogs(blogs.sort((a, b) => b.likes - a.likes));
-    });
-  }, []);
+
+  const result = useQuery({
+    queryKey: ['blogs'], 
+    queryFn: blogService.getAllBlogs,
+    refetchOnWindowFocus: false,
+  });
+  const newBlogMutation = useMutation({
+    mutationFn: blogService.createNewBlog,
+    onSuccess: (newBlog) => {
+      queryClient.invalidateQueries(['blogs']);
+
+      showNotification({
+        message: `a new blog "${newBlog.title}" by ${newBlog.author} added`,
+        type: "standard-notification",
+      });
+
+      noteFormRef.current.handleToggleVisibility();
+    },
+    onError: (error) => {
+      console.log("something went wrong: ", error);
+      showNotification({
+        message: "something went wrong", 
+        type: "error"
+      });
+    },
+  });
+
+  if (result.isLoading) {
+    return <div>loading data...</div>
+  }
+
+  const blogs = result.data;
 
   function handleLogout() {
     localStorage.removeItem("blogAppUser");
@@ -63,26 +92,7 @@ const App = () => {
   }
 
   async function handleAddBlog(blog) {
-    try {
-      const returnedBlog = await blogService.createNewBlog(blog);
-      setBlogs((prevBlogs) =>
-        prevBlogs.concat(returnedBlog).sort((a, b) => b.likes - a.likes),
-      );
-
-      showNotification({
-        message: `a new blog "${blog.title}" by ${blog.author} added`,
-        type: "standard-notification",
-      });
-
-      noteFormRef.current.handleToggleVisibility();
-    } catch (error) {
-      setBlogs(blogs);
-
-      console.log("something went wrong: ", error);
-      showNotification({
-        message: "something went wrong", 
-        type: "error"});
-    }
+    newBlogMutation.mutate(blog);
   }
   async function handleLikeBlog(id, blog) {
     try {
