@@ -50,14 +50,12 @@ BlogsRouter.delete('/:id', userExtractor, async (request, response, next) => {
   const user = request.user;
   const blog = await Blog.findById(request.params.id);
 
-  console.log(blog)
-
   if (user.id.toString() !== blog.user.toString()) {
     return response.status(401).json({ error: 'invalid user' });
   }
   
   await Blog.deleteOne(blog);
-  response.status(204).end();
+  response.status(200).json(blog);
 });
 
 BlogsRouter.put('/:id', userExtractor, async (request, response, next) => {

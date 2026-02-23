@@ -55,12 +55,41 @@ const App = () => {
       });
     },
   });
+  const likeBlogMutation = useMutation({
+    mutationFn: blogService.updateBlog,
+    onSuccess: () => {
+      queryClient.invalidateQueries(['blogs']);
+    },
+    onError: (error) => {
+      console.log("something went wrong: ", error);
+      showNotification({
+        message: "something went wrong", 
+        type: "error"});
+    }
+  });
+  const deleteBlogMutation = useMutation({
+    mutationFn: blogService.deleteBlog,
+    onSuccess: (deletedBlog) => {
+      queryClient.invalidateQueries(['blogs']);
+      showNotification({
+        message: `a blog "${deletedBlog.title}" was deleted`,
+        type: "standard-notification",
+      });
+    },
+    onError: (error) => {
+      console.log("something went wrong: ", error);
+      showNotification({
+        message: "something went wrong", 
+        type: "error"
+      });
+    },
+  })
 
   if (result.isLoading) {
     return <div>loading data...</div>
   }
 
-  const blogs = result.data;
+  const blogs = result.data.sort((a, b) => b.likes - a.likes);
 
   function handleLogout() {
     localStorage.removeItem("blogAppUser");
@@ -91,55 +120,23 @@ const App = () => {
     }
   }
 
-  async function handleAddBlog(blog) {
+  function handleAddBlog(blog) {
     newBlogMutation.mutate(blog);
   }
-  async function handleLikeBlog(id, blog) {
-    try {
-      const newBlog = {
-        likes: blog.likes + 1,
-      };
+  function handleLikeBlog(id, blog) {
+    const newBlog = {
+      likes: blog.likes + 1,
+    };
 
-      const updatedBlog = await blogService.updateBlog(id, newBlog);
-      setBlogs((prevBlogs) =>
-        prevBlogs
-          .filter((blog) => blog.id !== id)
-          .concat(updatedBlog)
-          .sort((a, b) => b.likes - a.likes),
-      );
-    } catch (error) {
-      setBlogs(blogs);
-
-      console.log("something went wrong: ", error);
-      showNotification({
-        message: "something went wrong", 
-        type: "error"});
-    }
+    likeBlogMutation.mutate({ id, newBlog });
   }
-  async function handleDeleteBlog(id, blog) {
+  function handleDeleteBlog(id, blog) {
     const isDelete = window.confirm(
       `Remove blog "${blog.title}" by ${blog.author}?`,
     );
 
     if (isDelete) {
-      try {
-        const data = await blogService.deleteBlog(id);
-
-        showNotification({
-          message: `a blog "${blog.title}" was deleted`,
-          type: "standard-notification",
-        });
-
-        setBlogs((prevBlogs) => prevBlogs.filter((bl) => bl.id !== id));
-      } catch (error) {
-        setBlogs(blogs);
-
-        console.log("something went wrong: ", error);
-        showNotification({
-          message: "something went wrong", 
-          type: "error"
-        });
-      }
+      deleteBlogMutation.mutate({ id });
     }
   }
 
