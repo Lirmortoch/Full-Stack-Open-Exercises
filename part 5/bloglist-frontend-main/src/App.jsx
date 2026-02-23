@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import Blog from "./components/Blog";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
@@ -8,14 +8,12 @@ import BlogForm from "./components/BlogForm";
 import Notification from "./components/Notification";
 import UserForm from "./components/UserForm";
 import Togglable from "./components/Togglable";
+import { NotificationContext } from "./store/NotificationContext";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
-  const [notification, setNotification] = useState({
-    message: null,
-    type: "standard-notification",
-  });
+  const { showNotification } = useContext(NotificationContext);
 
   const noteFormRef = useRef();
 
@@ -35,13 +33,6 @@ const App = () => {
     });
   }, []);
 
-  function handleSetNotification(message, type) {
-    setNotification({ message, type });
-    setTimeout(
-      () => setNotification({ message: null, type: "standard-notification" }),
-      3000,
-    );
-  }
   function handleLogout() {
     localStorage.removeItem("blogAppUser");
 
@@ -58,13 +49,16 @@ const App = () => {
 
       setUser(user);
 
-      handleSetNotification(
-        `You'are successfully logged in`,
-        "standard-notification",
-      );
+      showNotification({
+        message: `You'are successfully logged in`,
+        type: "standard-notification",
+      });
     } catch (error) {
       console.log("wrong username or password", error.message);
-      handleSetNotification("wrong username or password", "error");
+      showNotification({
+        message: "wrong username or password", 
+        type: "error",
+      });
     }
   }
 
@@ -75,17 +69,19 @@ const App = () => {
         prevBlogs.concat(returnedBlog).sort((a, b) => b.likes - a.likes),
       );
 
-      handleSetNotification(
-        `a new blog "${blog.title}" by ${blog.author} added`,
-        "standard-notification",
-      );
+      showNotification({
+        message: `a new blog "${blog.title}" by ${blog.author} added`,
+        type: "standard-notification",
+      });
 
       noteFormRef.current.handleToggleVisibility();
     } catch (error) {
       setBlogs(blogs);
 
       console.log("something went wrong: ", error);
-      handleSetNotification("something went wrong", "error");
+      showNotification({
+        message: "something went wrong", 
+        type: "error"});
     }
   }
   async function handleLikeBlog(id, blog) {
@@ -105,7 +101,9 @@ const App = () => {
       setBlogs(blogs);
 
       console.log("something went wrong: ", error);
-      handleSetNotification("something went wrong", "error");
+      showNotification({
+        message: "something went wrong", 
+        type: "error"});
     }
   }
   async function handleDeleteBlog(id, blog) {
@@ -117,17 +115,20 @@ const App = () => {
       try {
         const data = await blogService.deleteBlog(id);
 
-        handleSetNotification(
-          `a blog "${blog.title}" was deleted`,
-          "standard-notification",
-        );
+        showNotification({
+          message: `a blog "${blog.title}" was deleted`,
+          type: "standard-notification",
+        });
 
         setBlogs((prevBlogs) => prevBlogs.filter((bl) => bl.id !== id));
       } catch (error) {
         setBlogs(blogs);
 
         console.log("something went wrong: ", error);
-        handleSetNotification("something went wrong", "error");
+        showNotification({
+          message: "something went wrong", 
+          type: "error"
+        });
       }
     }
   }
@@ -164,7 +165,7 @@ const App = () => {
     <main>
       <h1>Blogs</h1>
       <section>
-        <Notification message={notification.message} type={notification.type} />
+        <Notification />
         {mainElem}
       </section>
     </main>

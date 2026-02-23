@@ -35,7 +35,7 @@ export const NotificationProvider = ({ children }) => {
       notificationDispatch({
         type: 'CLEAR_NOTI',
       });
-    });
+    }, 5 * 1000);
   }
 
   const notificationCtxValue = {

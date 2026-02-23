@@ -1,4 +1,10 @@
-export default function Notification({ message, type }) {
+import { useContext } from "react";
+import { NotificationContext } from "../store/NotificationContext";
+
+export default function Notification({}) {
+  const { notification } = useContext(NotificationContext);
+  const { message, type } = notification;
+
   if (message === null) {
     return;
   }
