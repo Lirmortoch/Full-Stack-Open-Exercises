@@ -33,7 +33,7 @@ const App = () => {
       <>
         <p>
           {user.name} logged in
-          <button onClick={logout}>Logout</button>
+          <button onClick={() => dispatch(logout())}>Logout</button>
         </p>
 
         <Togglable buttonLabel={"create new blog"} ref={blogFormRef}>
