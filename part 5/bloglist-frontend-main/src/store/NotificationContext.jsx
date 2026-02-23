@@ -19,7 +19,7 @@ const notificationReducer = (state, action) => {
 
 export const NotificationContext = createContext();
 
-export const NotificationProvider = ({ children }) => {
+export const NotificationContextProvider = ({ children }) => {
   const [notification, notificationDispatch] = useReducer(notificationReducer, {
     message: null,
     type: "standard-notification",

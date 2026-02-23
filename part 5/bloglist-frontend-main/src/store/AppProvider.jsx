@@ -1,10 +1,11 @@
-import { NotificationProvider } from './NotificationContext';
+import { NotificationContextProvider } from './NotificationContext';
+import { UserContextProvider } from './UserContext';
 
 const AppProvider = ({ children }) => {
   return (
-    <NotificationProvider>
-      {children}
-    </NotificationProvider>
+    <NotificationContextProvider>
+      <UserContextProvider>{children}</UserContextProvider>
+    </NotificationContextProvider>
   );
 }
 

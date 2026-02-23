@@ -1,6 +1,8 @@
-import { useRef } from "react";
+import { useContext, useRef } from "react";
+import { UserContext } from "../store/UserContext";
 
-export default function UserForm({ login }) {
+export default function UserForm({ }) {
+  const { userLogin } = useContext(UserContext);
   const usernameRef = useRef();
   const passwordRef = useRef();
 
@@ -10,7 +12,7 @@ export default function UserForm({ login }) {
     const username = usernameRef.current.value;
     const password = passwordRef.current.value;
 
-    login(username, password);
+    userLogin(username, password);
 
     usernameRef.current.value = "";
     passwordRef.current.value = "";
