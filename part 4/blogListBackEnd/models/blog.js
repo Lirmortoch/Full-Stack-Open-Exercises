@@ -17,6 +17,12 @@ const blogSchema = mongoose.Schema({
     required: true,
   },
   likes: Number,
+  comments: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'BlogComments',
+    }
+  ],
 }, { collection: 'blogs' });
 blogSchema.set('toJSON', {
   transform: (document, returnedObject) => {

@@ -1,7 +1,5 @@
-import Blogs from "./Blogs";
-
 export default function User({ user }) {
-  if (!user) return null;
+  if (!user) return <div>Loading...</div>;
   
   return (
     <div>

@@ -19,6 +19,7 @@ const App = () => {
   const users = useSelector(({ users }) => users);
   const user = useSelector(({ user }) => user);
   const blogs = useSelector(({ blogs }) => blogs);
+  
   const [initialized, setInitialized] = useState(false);
 
   const dispatch = useDispatch();
@@ -30,6 +31,7 @@ const App = () => {
 
   useEffect(() => {
     dispatch(initializeBlogs());
+    setInitialized(true);
   }, [dispatch]);
 ;
   const userMatch = useMatch('/users/:id');
