@@ -1,8 +1,10 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { likeOneBlog, deleteOneBlog } from "../reducers/blogReducer";
 
-export default function Blog({ blog, name }) {
+export default function Blog({ blog }) {
+  const name = useSelector(({ user }) => user).name;
+
   const [visibility, setVisibility] = useState(false);
 
   const dispatch = useDispatch();
