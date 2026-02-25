@@ -10,14 +10,20 @@ import UserForm from "./components/UserForm";
 import Togglable from "./components/Togglable";
 
 import "./App.css";
-import Blogs from "./components/Blogs";
+import Blog from "./components/Blog";
 import { initializeUser, logout } from "./reducers/userReducer";
 import Users from "./components/Users";
 import User from "./components/User";
 
+function findById(arr, param, arrParam) {
+  const matchParam = useMatch(param);
+  return matchParam ? arr.find(a => a[arrParam] === matchParam.params[arrParam]) : null;
+}
+
 const App = () => {
   const users = useSelector(({ users }) => users);
   const user = useSelector(({ user }) => user);
+  const blogs = useSelector(({ blogs }) => blogs);
 
   const dispatch = useDispatch();
 
@@ -30,9 +36,9 @@ const App = () => {
   useEffect(() => {
     dispatch(initializeBlogs());
   }, [dispatch]);
-
-  const matchUser = useMatch('/users/:id');
-  const userById = matchUser ? users.find(u => u.id === matchUser.params.id) : null;
+;
+  const userById = findById(users, '/users/:id', 'id');
+  const blogById = findById(blogs, '/blogs/:id', 'id');
 
   let mainElem = <UserForm />;
   if (user) {
@@ -52,6 +58,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={ <Users /> } />
           <Route path="/users/:id" element={ <User user={userById} /> } />
+          <Route path="/blogs/:id" element={ <Blog blog={blogById} /> }/>
         </Routes>
       </>
     );

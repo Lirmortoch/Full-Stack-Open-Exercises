@@ -54,6 +54,12 @@ li button {
   margin-bottom: 5px;
 }
 
+.likes {
+  margin-top: 15px;
+  display: flex;
+  gap: 15px;
+}
+
 .table {
   display: grid;
   grid-template-areas: 

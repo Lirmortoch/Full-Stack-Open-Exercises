@@ -1,53 +1,30 @@
-import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { likeOneBlog, deleteOneBlog } from "../reducers/blogReducer";
 
 export default function Blog({ blog }) {
   const name = useSelector(({ user }) => user).name;
-
-  const [visibility, setVisibility] = useState(false);
-
   const dispatch = useDispatch();
 
-  const hideWhenVisible = { display: visibility ? "none" : "" };
-  const showWhenVisible = { display: visibility ? "" : "none" };
-
-  function handleToggleVisibility() {
-    setVisibility((prevVisiStatus) => !prevVisiStatus);
-  }
-
   return (
-    <div className="blog">
-      <li style={hideWhenVisible} className="blog-title">
-        <span className="blog-title__content">
-          {blog.title} - {blog.author}
-        </span>
-        <button onClick={handleToggleVisibility}>view</button>
-      </li>
+    <div>
+      <h2>
+        {blog.title} by {blog.author}
+      </h2>
 
-      <li style={showWhenVisible}>
-        <p className="blog-title">
-          <span className="blog-title__content">
-            {blog.title} - {blog.author}
-          </span>
-          <button onClick={handleToggleVisibility}>hide</button>
-        </p>
+      <a href={blog.url}>{blog.url}</a>
 
-        <a href={blog.url}>{blog.url}</a>
+      <div className="likes">
+        <div>likes {blog.likes}</div>
+        <div>
+          <button onClick={() => dispatch(likeOneBlog(blog))}>like</button>
+        </div>
+      </div>
 
-        <p>
-          <span>likes {blog.likes}</span>
-          <span>
-            <button onClick={() => dispatch(likeOneBlog(blog))}>like</button>
-          </span>
-        </p>
+      <p>added by {blog.author}</p>
 
-        <p>{blog.author}</p>
-
-        {blog.author === name && (
-          <button onClick={() => dispatch(deleteOneBlog(blog))}>remove</button>
-        )}
-      </li>
+      {blog.author === name && (
+        <button onClick={() => dispatch(deleteOneBlog(blog))}>remove</button>
+      )}
     </div>
   );
 }
