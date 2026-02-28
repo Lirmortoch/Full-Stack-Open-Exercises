@@ -65,10 +65,10 @@ const App = () => {
   return (
     <main>
       <Menu />
-      <h1>Blogs</h1>
       <Notification />
 
-      <section>  
+      <section className="p-2">  
+        <h1 className="text-3xl mb-8">Blogs</h1>
         {mainElem}
       </section>
     </main>

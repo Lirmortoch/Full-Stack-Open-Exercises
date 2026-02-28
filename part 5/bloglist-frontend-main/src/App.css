@@ -1,5 +1,7 @@
 /* It's not a best styling, I'll refactor this later */
 
+@import "tailwindcss";
+
 .form__btn {
   margin-top: 10px;
 }
@@ -9,9 +11,6 @@ form {
 }
 form fieldset {
   border: none;
-}
-form input {
-  width: 75%;
 }
 form label {
   margin-right: 5px;

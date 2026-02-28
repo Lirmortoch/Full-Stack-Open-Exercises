@@ -6,15 +6,20 @@ import { logout } from "../reducers/userReducer";
 export default function Menu({  }) {
   const user = useSelector(({ user }) => user);
 
+  const buttonClassName = "hover:text-black focus:outline-2 rounded-xs pt-1 pb-1 pl-2 pr-2";
+  const linkClassName = `${buttonClassName}`
+
   return (
-    <nav>
-      <div className="logout">
+    <nav className="flex flex-col mb-6 p-2 bg-[#d4b88a] text-white">
+      <div className="logout pb-2">
         {user.name} logged in
-        <button onClick={() => dispatch(logout())}>Logout</button>
+        <button className={buttonClassName} onClick={() => dispatch(logout())}>Logout</button>
       </div>
 
-      <Link to={'/'} className="link">blogs</Link>
-      <Link to={'/users'} className="link">users</Link>
+      <div className="">
+        <Link to={'/'} className={linkClassName}>blogs</Link>
+        <Link to={'/users'} className={linkClassName}>users</Link>
+      </div>
     </nav>
   );
 }

@@ -14,7 +14,7 @@ export default function Users({}) {
  
   return (
     <>
-      <h2>Users</h2>
+      <h2 className="text-2xl mb-2">Users</h2>
       <div>
         <div className="table">
           <div className="table__header table__col1"></div>
